@@ -1,0 +1,4 @@
+[submodule "umka-lang"]
+	path = umka-lang
+	url = https://github.com/vtereshkov/umka-lang.git
+	branch = master
