@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define BUFFER_SIZE 50
+
+typedef struct {
+    size_t capacity;
+    size_t gapStart;
+    size_t gapEnd;
+    char data[];
+} GapBuffer;
+
+GapBuffer* newBuffer(size_t initialCapacity) {
+    GapBuffer *buff = (GapBuffer*)malloc(sizeof(GapBuffer) + initialCapacity * sizeof(char));
+
+    if (buff == NULL) {
+        printf("failed to allocate buffer");
+        exit(1);
+    }
+
+    (buff)->gapStart = 0;
+    (buff)->capacity = initialCapacity;
+    (buff)->gapEnd = initialCapacity - 1;
+
+    return buff;
+}
+
+GapBuffer* resizeBuffer(GapBuffer* buff, size_t newCapacity) {
+    GapBuffer* newBuff = (GapBuffer*)realloc(buff, sizeof(GapBuffer) + newCapacity * sizeof(char));
+
+    if (newBuff == NULL) {
+        printf("failed to reallocate buffer");
+        exit(1);
+    }
+
+    (newBuff)->capacity = newCapacity;
+    return newBuff;
+}
+
+void insertChar(GapBuffer* buff, const char c) {
+    if ((buff)->capacity > 1) {
+        (buff)->data[buff->gapStart++] = c;
+        (buff)->capacity--;
+    } else {
+        (buff) = resizeBuffer(buff, strlen(buff->data) * 2);
+        insertChar(buff, c);
+    }
+}
+
+void insertString(GapBuffer* buff, const char* str) {
+    size_t length = strlen(str);
+    for (size_t i = 0; i <= length; i++) {
+        insertChar(buff, str[i]);
+    }
+}
+
+void destroyBuffer(GapBuffer* buff) {
+    free(buff);
+    buff = NULL;
+}
+
+int main(void) {
+    GapBuffer* buff = newBuffer(BUFFER_SIZE);
+
+    insertString(buff, "Hello world!");
+
+    printf("Buffer: %s\n", buff->data);
+
+    destroyBuffer(buff);
+    return 0;
+}
