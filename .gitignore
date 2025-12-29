@@ -1,0 +1,71 @@
+# Compiled object files and libraries
+*.o
+*.obj
+*.lo
+*.lai
+*.la
+*.a
+*.lib
+*.so
+*.dll
+*.dylib
+
+# Executables
+*.exe
+*.out
+a.out
+*.elf
+
+# Debug / profiling / coverage outputs
+*.dSYM/
+*.stackdump
+*.core
+core
+*.map
+*.gcno
+*.gcda
+*.gcov
+coverage/
+
+# Build directories and generated files
+build/
+bin/
+out/
+dist/
+lib/
+.libs/
+.deps/
+Makefile.imply
+Makefile.in~
+Makefile~
+cmake_install.cmake
+CMakeFiles/
+CMakeCache.txt
+compile_commands.json
+
+# Autotools / configure artifacts
+config.log
+config.status
+configure
+autom4te.cache/
+
+# Dependency and temp files
+*.d
+*.dep
+
+# Editor/IDE and OS files
+.vscode/
+.idea/
+*.code-workspace
+*.sublime-project
+*.sublime-workspace
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+# Tags / indexes
+tags
+cscope.*
+
+build/
