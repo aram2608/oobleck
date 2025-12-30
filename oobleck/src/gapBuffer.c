@@ -11,7 +11,6 @@ GapBuffer* newBuffer(size_t initialCapacity) {
     (buff)->gapStart = 0;
     (buff)->capacity = initialCapacity;
     (buff)->gapEnd = initialCapacity - 1;
-
     return buff;
 }
 
@@ -28,21 +27,25 @@ GapBuffer* resizeBuffer(GapBuffer* buff, size_t newCapacity) {
 }
 
 void insertChar(GapBuffer* buff, const char c) {
-    printf("Inserting: %c\n", c);
     if ((buff)->capacity > 1) {
         (buff)->data[buff->gapStart++] = c;
         (buff)->capacity--;
     } else {
-        (buff) = resizeBuffer(buff, strlen(buff->data) * 2);
-        insertChar(buff, c);
+        // (buff) = resizeBuffer(buff, strlen(buff->data) * 2);
+        // insertChar(buff, c);
+        printf("Full\n");
     }
 }
 
 void insertString(GapBuffer* buff, const char* str) {
     size_t length = strlen(str);
-    for (size_t i = 0; i <= length; i++) {
+    for (size_t i = 0; i <= length - 1; i++) {
         insertChar(buff, str[i]);
     }
+}
+
+char* toString(GapBuffer* buff) {
+    
 }
 
 void destroyBuffer(GapBuffer* buff) {
