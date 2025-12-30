@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
     printf("Buffer: %s\n", buff->data);
 
     initializeSDL();
-    TTF_Font* font = TTF_OpenFont("./font/Fira_Code/static/FiraCode-Light.ttf", 10);
+    TTF_Font* font = TTF_OpenFont("./font/Fira_Code/static/FiraCode-Regular.ttf", 10);
     SDL_Color color = {
         .r = 255,
         .g = 255,
@@ -50,36 +50,64 @@ int main(int argc, char** argv) {
 
     if (font == NULL) {
         printf("PANIC: error loading font\n");
-        exit(1);
-    }
-
-    SDL_Surface* textSurface = TTF_RenderText_Blended(font, "Text", 0, color);
-
-    if (textSurface == NULL) {
-        printf("PANIC: failure creating text surface");
-        exit(1);
+        abort();
     }
 
     SDL_Window* window = SDL_CreateWindow("oobleck", 600, 600, SDL_WINDOW_RESIZABLE);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, NULL);
+    SDL_Surface* textSurface = textSurface = TTF_RenderText_Solid(font, buff->data, 0, color);
 
-    SDL_Texture* textImage = SDL_CreateTextureFromSurface(renderer, textSurface);
-    SDL_DestroySurface(textSurface);
+    if (textSurface == NULL) {
+        printf("PANIC: failure creating text surface");
+        abort();
+    }
+
+    SDL_Texture* textImage = textImage = SDL_CreateTextureFromSurface(renderer, textSurface);
+
+    SDL_FRect textRect = {
+        .h = textSurface->h * 3,
+        .w = textSurface->w * 3,
+        .x = 0,
+        .y = 0,
+    };
 
     bool run = true;
     SDL_Event event;
 
-    while(run) {
-        SDL_RenderTexture(renderer, textImage, NULL, NULL);
-        while(SDL_PollEvent(&event)) {
-            if (event.type == SDL_EVENT_QUIT) {
-                run = false;
-            }
-        }
+    bool ok = SDL_StartTextInput(window);
+
+    if (!ok) {
+        printf("PANIC: failed to start capturing text input");
+        abort();
     }
 
+    while(run) {
+        while(SDL_PollEvent(&event)) {
+            switch (event.type) {
+                case SDL_EVENT_QUIT:
+                    run = false;
+                    break;
+                case SDL_EVENT_TEXT_INPUT:
+                    const char c = *event.text.text;
+                    printf("Pressed: %c\n", c);
+                    insertChar(buff, c);
+                    break;
+            }
+        }
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+        SDL_RenderClear(renderer);
+
+        ok = SDL_RenderTexture(renderer, textImage, NULL, &textRect);
+
+        if (!ok) {
+            printf("Failed to render texture\n");
+        }
+        SDL_RenderPresent(renderer);
+    }
+    
     umkaFree(umka);
     destroyBuffer(buff);
+    SDL_DestroySurface(textSurface);
     closeSDL(window, textImage, renderer, font);
     return 0;
 }

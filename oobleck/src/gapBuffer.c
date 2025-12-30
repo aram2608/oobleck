@@ -28,6 +28,7 @@ GapBuffer* resizeBuffer(GapBuffer* buff, size_t newCapacity) {
 }
 
 void insertChar(GapBuffer* buff, const char c) {
+    printf("Inserting: %c\n", c);
     if ((buff)->capacity > 1) {
         (buff)->data[buff->gapStart++] = c;
         (buff)->capacity--;
