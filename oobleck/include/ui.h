@@ -1,6 +1,11 @@
 #ifndef UI_H
 #define UI_H
 
+/**
+ * @file ui.h
+ * @brief Provides the definitions for the UI and its utilities
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -10,16 +15,39 @@
 
 #define WINDOW_PARAMS SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY
 
+
+/// @brief Structure to store SDL components needed for rendering
 typedef struct {
-    TTF_Font* font;
-    SDL_Window* window;
-    SDL_Renderer* renderer;
+    TTF_Font* font; /** Pointer to text font */
+    SDL_Window* window; /** Window used for drawing */
+    SDL_Renderer* renderer; /** Renderer for text and other events */
 } UI;
 
-UI* createUI();
+/**
+ * @brief Function used to create a new UI structure
+ * @return A pointer to a UI
+ */
+UI* createUI(void);
+
+/**
+ * @brief Function used to initialize an SDL context
+ * 
+ * This function is later invoked upon UI creation
+ */
 void initializeSDL(void);
-void closeSDL(SDL_Window* window, SDL_Renderer* renderer, TTF_Font* font);
-void renderText(SDL_Renderer* renderer, const char* text, size_t textSize, TTF_Font* font);
+
+/**
+ * @brief Function used to render the Gap Buffer's text to the window
+ * 
+ * @param ui A pointer to the UI structure
+ * @param text The C string to be rendered to the window
+ * @param textSize The size of the string
+ */
+void renderText(UI* ui, const char* text, size_t textSize);
+
+/**
+ * @brief Function used to destroy the UI and cleanup allocated memory
+ */
 void destroyUI(UI* ui);
 
-#endif
+#endif // UI_H

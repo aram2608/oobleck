@@ -1,4 +1,3 @@
-#include "../include/umkaPlugin.h"
 #include "../include/editor.h"
 
 #include <SDL3/SDL.h>
@@ -6,28 +5,7 @@
 #include <SDL3_ttf/SDL_ttf.h>
 
 int main(int argc, char** argv) {
-    GapBuffer* buff = newBuffer(BUFFER_SIZE);
-    Umka* umka = loadUmka("plugin.um", argc, argv);
-    umkaRun(umka);
-
-    initializeSDL();
-
-    TTF_Font* font = TTF_OpenFont("./font/Fira_Code/static/FiraCode-Regular.ttf", 10);
-
-    if (font == NULL) {
-        printf("PANIC: error loading font\n");
-        abort();
-    }
-
-    SDL_Window* window = SDL_CreateWindow("oobleck", 600, 600, SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY);
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, NULL);
-
-    bool ok = SDL_StartTextInput(window);
-
-    if (!ok) {
-        printf("PANIC: failed to start capturing text input");
-        abort();
-    }
+    Editor* editor = newEditor(argc, argv);
 
     bool run = true;
     SDL_Event event;
@@ -39,7 +17,7 @@ int main(int argc, char** argv) {
                     break;
                 case SDL_EVENT_KEY_DOWN:
                     if (event.key.key == SDLK_BACKSPACE) {
-                        backspace(buff);
+                        backspace(editor->buffer);
                     } else if (event.key.key == SDLK_ESCAPE) {
                         run = false;
                         break;
@@ -47,20 +25,17 @@ int main(int argc, char** argv) {
                     break;
                 case SDL_EVENT_TEXT_INPUT:
                     const char c = *event.text.text;
-                    insertChar(buff, c);
+                    insertChar(editor->buffer, c);
                     break;
             }
         }
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-        SDL_RenderClear(renderer);
-        renderText(renderer, buff->data, buff->gapStart, font);
-        SDL_RenderPresent(renderer);
+        SDL_SetRenderDrawColor(editor->ui->renderer, 0, 0, 0, 0);
+        SDL_RenderClear(editor->ui->renderer);
+        renderText(editor->ui, editor->buffer->data, editor->buffer->gapStart);
+        SDL_RenderPresent(editor->ui->renderer);
         SDL_Delay(20);
     }
 
-    SDL_StopTextInput(window);
-    closeSDL(window, renderer, font);
-    umkaFree(umka);
-    destroyBuffer(buff);
+    destroyEditor(editor);
     return 0;
 }

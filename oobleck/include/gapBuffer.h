@@ -1,6 +1,11 @@
 #ifndef GAP_BUFFER_H
 #define GAP_BUFFER_H
 
+/**
+ * @file gapBuffer.h
+ * @brief Provides the definitions for the Gap Buffer and its utilities
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,41 +13,71 @@
 
 #define BUFFER_SIZE 50
 
-// Structure to represent the Gap Buffer
-// The data is stored in a flexible array member (FAM)
+/// @brief Structure to represent the Gap Buffer.
 typedef struct {
-    size_t capacity;
-    size_t gapStart;
-    size_t gapEnd;
-    char data[];
+    size_t capacity; /** The total capacity/size of the buffer */
+    size_t gapStart; /**< The start of the gap */
+    size_t gapEnd;  /**< The end of the gap */
+    char data[]; /**< The data is stored in a flexible array member (FAM) */
 } GapBuffer;
 
-// Function to create a new buffer
-// Takes an inital size for the starting capacity as an argument
-// Returns a pointer to a buffer, the caller is required to free up allocated
-// memory
+/**
+ * @brief Function to create a new gap buffer
+ * 
+ * @param initialCapacity The intital starting capacity for the buffer
+ * @return A pointer to the newly created buffer
+ */
 GapBuffer* newBuffer(size_t initialCapacity);
 
-// Function to resize the gap in the buffer
-// Takes a pointer to the buffer and the new capacity as arguments
-// A general rule of thumb is to double the size of the buffer as follows
-// strlen(buff->data) * 2
+/**
+ * @brief Function to resize the gap buffer
+ * 
+ * A general rule of thumb is to double the size of the buffer as follows
+ * strlen(buff->data) * 2
+ * 
+ * @param buff A pointer to the gap buffer
+ * @param newCapacity The new size desired for the buffer
+ */
 GapBuffer* resizeBuffer(GapBuffer* buff, size_t newCapacity);
 
-// Function to insert a single character into the buffer
-// Takes a buffer and a char as arguments
+/**
+ * @brief Function to insert a character into the buffer
+ * 
+ * @param buff A pointer to the gap buffer
+ * @param c The character to be inserted
+ */
 void insertChar(GapBuffer* buff, const char c);
 
 // Function to insert a string into the buffer
 // Takes a buffer and a C string as an argument
+
+/**
+ * @brief Function to insert an entire C string into the buffer
+ * 
+ * Is simply a wrapper for the insertChar function
+ * 
+ * @param buff A pointer to the gap buffer
+ * @param str The string to be inserted
+ */
 void insertString(GapBuffer* buff, const char* str);
 
 // Function used to free up memory allocated for the buffer
 // Takes a buffer as the argument
 // After buffer creation, the caller is required to call this method on program
 // termination
-void destroyBuffer(GapBuffer* buff);
 
+/**
+ * @brief A function to remove a character from the buffer following a backspace
+ * 
+ * @param buff A pointer to the gap buffer
+ */
 void backspace(GapBuffer* buff);
 
-#endif // gapBuffer.h
+/**
+ * @brief Function to destroy the buffer at the end of the program
+ * 
+ * @param buff A pointer to the gap buffer
+ */
+void destroyBuffer(GapBuffer* buff);
+
+#endif // GAP_BUFFER_H

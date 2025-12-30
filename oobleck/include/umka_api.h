@@ -1,7 +1,6 @@
 #ifndef UMKA_API_H_INCLUDED
 #define UMKA_API_H_INCLUDED
 
-
 #ifdef _WIN32
     #if defined(UMKA_STATIC)
         #define UMKA_EXPORT
