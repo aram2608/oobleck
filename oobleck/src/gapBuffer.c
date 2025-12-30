@@ -52,3 +52,10 @@ void destroyBuffer(GapBuffer* buff) {
     free(buff);
     buff = NULL;
 }
+
+void backspace(GapBuffer* buff) {
+    if ((buff)->gapStart > 0) {
+        (buff)->gapStart--;
+        (buff)->capacity++;
+    }
+}

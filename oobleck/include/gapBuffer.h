@@ -43,4 +43,6 @@ void insertString(GapBuffer* buff, const char* str);
 // termination
 void destroyBuffer(GapBuffer* buff);
 
+void backspace(GapBuffer* buff);
+
 #endif // gapBuffer.h

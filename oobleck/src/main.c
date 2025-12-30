@@ -38,6 +38,11 @@ int main(int argc, char** argv) {
                 case SDL_EVENT_QUIT:
                     run = false;
                     break;
+                case SDL_EVENT_KEY_DOWN:
+                    if (event.key.key == SDLK_BACKSPACE) {
+                        backspace(buff);
+                    }
+                    break;
                 case SDL_EVENT_TEXT_INPUT:
                     const char c = *event.text.text;
                     insertChar(buff, c);

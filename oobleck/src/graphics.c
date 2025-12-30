@@ -25,7 +25,7 @@ void closeSDL(SDL_Window* window, SDL_Renderer* renderer, TTF_Font* font) {
 }
 
 void renderText(SDL_Renderer* renderer, const char* text, size_t textSize, TTF_Font* font) {
-    if (strlen(text) == 0) {
+    if (strlen(text) == 0 || textSize == 0) {
         return;
     }
 
