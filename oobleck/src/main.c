@@ -1,6 +1,5 @@
 #include "../include/umkaPlugin.h"
-#include "../include/gapBuffer.h"
-#include "../include/graphics.h"
+#include "../include/editor.h"
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
@@ -20,7 +19,7 @@ int main(int argc, char** argv) {
         abort();
     }
 
-    SDL_Window* window = SDL_CreateWindow("oobleck", 600, 600, SDL_WINDOW_RESIZABLE);
+    SDL_Window* window = SDL_CreateWindow("oobleck", 600, 600, SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, NULL);
 
     bool ok = SDL_StartTextInput(window);
@@ -41,6 +40,9 @@ int main(int argc, char** argv) {
                 case SDL_EVENT_KEY_DOWN:
                     if (event.key.key == SDLK_BACKSPACE) {
                         backspace(buff);
+                    } else if (event.key.key == SDLK_ESCAPE) {
+                        run = false;
+                        break;
                     }
                     break;
                 case SDL_EVENT_TEXT_INPUT:
@@ -51,19 +53,13 @@ int main(int argc, char** argv) {
         }
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
         SDL_RenderClear(renderer);
-
         renderText(renderer, buff->data, buff->gapStart, font);
-
-        if (!ok) {
-            printf("Failed to render texture\n");
-        }
         SDL_RenderPresent(renderer);
         SDL_Delay(20);
     }
 
     SDL_StopTextInput(window);
     closeSDL(window, renderer, font);
-
     umkaFree(umka);
     destroyBuffer(buff);
     return 0;
