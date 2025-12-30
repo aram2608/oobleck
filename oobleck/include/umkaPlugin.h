@@ -14,22 +14,6 @@
 #include "umka_api.h"
 
 /**
- * @brief Function to load a file's contents
- * 
- * Takes a C string as an argument and returns a C string
- * The caller is responsible for freeing the allocated memory of the buffer
- * 
- * @param filePath The path to the Umka script
-
- * @return A C string of the loaded script
- */
-const char* loadUmkaScriptFromFile(const char* filePath);
-
-// Function to load an Umka context from a filePath
-// Takes a C string for the filepath and command line args as the arguments
-// Returns a pointer to an Umka context
-
-/**
  * @brief Function used to create an Umka context
  * 
  * @param filePath The path to the Umka Script

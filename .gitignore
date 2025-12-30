@@ -68,5 +68,5 @@ Thumbs.db
 tags
 cscope.*
 
-build/
 html/
+umka_darwin/

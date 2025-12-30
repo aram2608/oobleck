@@ -1,8 +1,8 @@
 #include "../include/ui.h"
 
-UI* createUI() {
+UI* createUI(void) {
     initializeSDL();
-    UI* ui = malloc(sizeof(UI));
+    UI* ui = (UI*)malloc(sizeof(UI));
 
     (ui)->font = TTF_OpenFont("./font/Fira_Code/static/FiraCode-Regular.ttf", 10);
 

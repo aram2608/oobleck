@@ -9,6 +9,8 @@ int main(int argc, char** argv) {
 
     bool run = true;
     SDL_Event event;
+    char c;
+
     while(run) {
         while(SDL_PollEvent(&event)) {
             switch (event.type) {
@@ -24,7 +26,7 @@ int main(int argc, char** argv) {
                     }
                     break;
                 case SDL_EVENT_TEXT_INPUT:
-                    const char c = *event.text.text;
+                    c = *event.text.text;
                     insertChar(editor->buffer, c);
                     break;
             }

@@ -14,7 +14,7 @@ SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
 INCLUDES := $(APP)/include
 
 # Library directory
-LIB_DIR := $(APP)/lib
+LIB_DIR := $(APP)/libs
 
 # Flags for gcc command
 INCLUDE_FLAGS := -I$(INCLUDES)

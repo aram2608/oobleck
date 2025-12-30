@@ -1,3 +1,19 @@
+fn fib(range: int): int {
+    a := 0
+    b := 1
+
+    if range == 0 || range == 1 {
+        return range
+    }
+
+    for k := 2; k <= range; k++ {
+        a, b = b, a + b
+    }
+
+    return a;
+}
+
 fn main() {
-    printf("Umka: Hello world!\n")
+    a := fib(10)
+    printf("Umka: Hello world! %d\n", a)
 }

@@ -45,7 +45,7 @@ void insertString(GapBuffer* buff, const char* str) {
 }
 
 char* toString(GapBuffer* buff) {
-    
+    return "Hello world";
 }
 
 void destroyBuffer(GapBuffer* buff) {
