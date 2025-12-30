@@ -1,15 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#define BUFFER_SIZE 50
-
-typedef struct {
-    size_t capacity;
-    size_t gapStart;
-    size_t gapEnd;
-    char data[];
-} GapBuffer;
+#include "../include/gapBuffer.h"
 
 GapBuffer* newBuffer(size_t initialCapacity) {
     GapBuffer *buff = (GapBuffer*)malloc(sizeof(GapBuffer) + initialCapacity * sizeof(char));
@@ -58,15 +47,4 @@ void insertString(GapBuffer* buff, const char* str) {
 void destroyBuffer(GapBuffer* buff) {
     free(buff);
     buff = NULL;
-}
-
-int main(void) {
-    GapBuffer* buff = newBuffer(BUFFER_SIZE);
-
-    insertString(buff, "Hello world!");
-
-    printf("Buffer: %s\n", buff->data);
-
-    destroyBuffer(buff);
-    return 0;
 }
