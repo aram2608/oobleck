@@ -28,8 +28,12 @@ typedef struct {
 
 /**
  * @brief Function to create a new editor structure, caller must deallocate memory
- * @param argc 
- * @param argv 
+ * @param argc The command line argument count
+ * @param argv The command line arguments
+ * 
+ * The provided parameters do not do anythin as of right now. They are simply
+ * passed to the Umka context for its constructor.
+ * 
  * @return A pointer to a new editor
  */
 Editor* newEditor(int argc, char** argv);
@@ -39,6 +43,67 @@ Editor* newEditor(int argc, char** argv);
  * @param editor Pointer to an editor
  */
 void destroyEditor(Editor* editor);
+
+/**
+ * @brief Function to return the length of the gap
+ * @param editor A pointer to the editor
+ * 
+ * A simple calculation of the gapEnd - gapStart
+ * @return The size of the gap
+ */
+size_t gapLength(Editor* editor);
+
+/**
+ * @brief Function to return the length of the buffer prefix
+ * @param editor A pointer to the editor
+ * 
+ * Simply returns the start of the gap. Used primarily for readability during
+ * calculations.
+ * 
+ * @return The size of the buffer prefix (ie. the start of the gap)
+ */
+size_t bufferPrefixLength(Editor* editor);
+
+/**
+ * @brief Function to return the length of the buffer suffix
+ * @param editor A pointer to the editor
+ * 
+ * Calculating the suffix is slightly more involved than the prefix.
+ * We need to subtract the total capacity from the end of the gap.
+ * 
+ * @return The size of the buffer suffix
+ */
+size_t bufferSuffixLength(Editor* editor);
+
+/**
+ * @brief Function to return the buffer capacity
+ * @param editor A pointer to the editor
+ * 
+ * A simple helper function to improve readability for calculations
+ * 
+ * @return The bufer capacity size
+ */
+size_t bufferCapacity(Editor* editor);
+
+/**
+ * @brief Function to return the buffer gap start
+ * @param editor A pointer to the editor
+ * 
+ * A simple helper function to improve readability, an alias for bufferPrefixLength
+ * 
+ * @return The start position of the buffer's gap
+ */
+size_t bufferGapStart(Editor* editor);
+
+/**
+ * @brief Function to return the buffer gap end
+ * @param editor A pointer to the editor
+ * 
+ * A simple helper function to improve readability for calculations
+ * 
+ * @return The end position of the buffer's gap
+ */
+size_t bufferGapEnd(Editor* editor);
 
 /**
  * @brief Function to resize the gap buffer
@@ -88,6 +153,11 @@ void moveLeft(Editor* editor);
  */
 void moveRight(Editor* editor);
 
+// TODO: Implement this function properly so it returns a char*
+// Need to calculate left side of buffer and right side of buffer
+// then concatenate them together
+// H e l l o - - - - -  W o r l d
+// -> Hello World
 void toString(Editor* editor);
 
 #endif // EDITOR_H

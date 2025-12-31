@@ -10,7 +10,7 @@ GapBuffer* newBuffer(size_t initialCapacity) {
 
     (buff)->gapStart = 0;
     (buff)->capacity = initialCapacity;
-    (buff)->gapEnd = initialCapacity - 1;
+    (buff)->gapEnd = initialCapacity;
     return buff;
 }
 
@@ -18,3 +18,4 @@ void destroyBuffer(GapBuffer* buff) {
     free(buff);
     buff = NULL;
 }
+

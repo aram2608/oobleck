@@ -25,9 +25,37 @@ void destroyEditor(Editor* editor) {
     free(editor);
 }
 
+size_t gapLength(Editor* editor) {
+    return (editor)->buffer->gapEnd - (editor)->buffer->gapStart;
+}
+
+size_t bufferPrefixLength(Editor* editor) {
+    return (editor)->buffer->gapStart;
+}
+
+size_t bufferSuffixLength(Editor* editor) {
+    return (editor)->buffer->capacity - (editor)->buffer->gapEnd;
+}
+
+size_t bufferCapacity(Editor* editor) {
+    return (editor)->buffer->capacity;
+}
+
+size_t bufferGapStart(Editor* editor) {
+    return (editor)->buffer->gapStart;
+}
+
+size_t bufferGapEnd(Editor* editor) {
+    return (editor)->buffer->gapEnd;
+}
+
 // TODO: Calculate the position of the string in memory so we can try and 
 // reconstruct our gap in the buffer
+
 void resizeBuffer(Editor* editor, size_t newCapacity) {
+    size_t oldCapacity = bufferCapacity(editor);
+    size_t rightSideLength = bufferSuffixLength(editor);
+
     GapBuffer* tempBuff = (GapBuffer*)realloc((editor)->buffer, sizeof(GapBuffer) + newCapacity * sizeof(char));
     printf("Resized\n");
 
@@ -36,17 +64,21 @@ void resizeBuffer(Editor* editor, size_t newCapacity) {
         exit(1);
     } else {
         (editor)->buffer = tempBuff;
+
+        // I don't know if this calculation is right honestly
+        // TODO: Map out the math here a bit better so we don't seg fault
+        size_t offset = newCapacity - bufferCapacity(editor);
+        (editor)->buffer->gapEnd = bufferGapStart(editor); + offset;
         (editor)->buffer->capacity = newCapacity;
-        (editor)->buffer->gapEnd = newCapacity - 1;
     }
 }
 
 void insertChar(Editor* editor, const char c) {
-    if ((editor)->buffer->gapEnd - (editor)->buffer->gapStart > 1) {
+    if (gapLength(editor) > 1) {
         (editor)->buffer->data[(editor)->buffer->gapStart++] = c;
         toString(editor);
     } else {
-        resizeBuffer(editor, (editor)->buffer->capacity * 2);
+        resizeBuffer(editor, bufferCapacity(editor) * 2);
         insertChar(editor, c);
     }
 }
@@ -59,13 +91,13 @@ void insertString(Editor* editor, const char* str) {
 }
 
 void backspace(Editor* editor) {
-    if ((editor)->buffer->gapStart > 0) {
+    if (bufferGapStart(editor) > 0) {
         (editor)->buffer->gapStart--;
     }
 }
 
 void moveLeft(Editor* editor) {
-    if ((editor)->buffer->gapStart > 0) {
+    if (bufferGapStart(editor) > 0) {
         const char c = (editor)->buffer->data[(editor)->buffer->gapStart - 1];
         (editor)->buffer->data[editor->buffer->gapEnd] = c;
         (editor)->buffer->gapStart--;
@@ -74,21 +106,25 @@ void moveLeft(Editor* editor) {
 }
 
 void moveRight(Editor* editor) {
-    if ((editor)->buffer->gapEnd < (editor)->buffer->capacity - 1) {
+    if ((editor)->buffer->gapEnd < (editor)->buffer->capacity) {
         const char c = (editor)->buffer->data[(editor)->buffer->gapEnd + 1];
-        (editor)->buffer->data[editor->buffer->gapStart] = c;
+        (editor)->buffer->data[(editor)->buffer->gapStart] = c;
         (editor)->buffer->gapStart++;
         (editor)->buffer->gapEnd++;
     }
 }
 
 void toString(Editor* editor) {
-    char* leftSide = (char*)malloc((editor)->buffer->gapStart);
-    char* rightSide = (char*)malloc((editor)->buffer->capacity - (editor)->buffer->gapEnd + 100);
-    strncpy(leftSide, (editor)->buffer->data, (editor)->buffer->gapStart);
-    strncpy(rightSide, (editor)->buffer->data + (editor)->buffer->gapEnd, (editor)->buffer->capacity - (editor)->buffer->gapEnd);
+    size_t oldCapacity = (editor)->buffer->capacity;
+    size_t rightSideLength = bufferSuffixLength(editor);
 
-    printf("Left side: %s, Right side: %s\n", leftSide, rightSide);
-    free(leftSide);
-    free(rightSide);
+    if (rightSideLength > 0) {
+        char* leftSide = (char*)malloc((editor)->buffer->gapStart + 10);
+        strncpy(leftSide, (editor)->buffer->data, bufferPrefixLength(editor));
+        free(leftSide);
+    } else {
+        char* leftSide = (char*)malloc((editor)->buffer->gapStart + 10);
+        strncpy(leftSide, (editor)->buffer->data, bufferPrefixLength(editor));
+        free(leftSide);
+    }
 }
