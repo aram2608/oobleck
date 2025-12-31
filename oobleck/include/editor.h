@@ -117,8 +117,6 @@ size_t bufferGapEnd(Editor* editor);
  */
 void resizeBuffer(Editor* editor, size_t newCapacity);
 
-void recalculateStringCache(Editor* editor);
-
 /**
  * @brief Function to insert a character into the buffer
  * 
@@ -139,7 +137,6 @@ void insertString(Editor* editor, const char* str);
 
 /**
  * @brief A function to remove a character from the buffer following a backspace
- * 
  * @param editor A pointer to the editor
  */
 void backspace(Editor* editor);
@@ -156,14 +153,31 @@ void moveLeft(Editor* editor);
  */
 void moveRight(Editor* editor);
 
-// TODO: Implement this function properly so it returns a char*
-// Need to calculate left side of buffer and right side of buffer
-// then concatenate them together
-// H e l l o - - - - -  W o r l d
-// -> Hello World
-// The caller needs to free memory for allocated resources
+/**
+ * @brief Function to recalculate the cached string
+ * @param editor A pointer to the editor
+ */
+void recalculateStringCache(Editor* editor);
+
+/**
+ * @brief Function to return the string representation of the buffer
+ * @param editor A pointer to the editor
+ * 
+ * This method simply returns the cached string. It first tests to see if the
+ * cache status is okay
+ * 
+ * @return The cached string
+ */
 char* toString(Editor* editor);
 
+/**
+ * @brief Function to return the cached string's size
+ * @param editor A pointer to the editor
+ * 
+ * This method simply returns the cached string's size.
+ * 
+ * @return The size of the cached string
+ */
 size_t stringSize(Editor* editor);
 
 #endif // EDITOR_H

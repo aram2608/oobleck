@@ -69,28 +69,6 @@ void resizeBuffer(Editor* editor, size_t newCapacity) {
     }
 }
 
-void recalculateStringCache(Editor* editor) {
-    size_t newCacheSize = sizeof(StringCache) + bufferCapacity(editor);
-    StringCache* tempCache = (StringCache*)realloc((editor)->stringCache, newCacheSize);
-
-    if (tempCache == NULL) {
-        printf("PANIC: failed to reallocate the string cache\n");
-        exit(1);
-    } else {
-        size_t gapEndOffset = (editor)->buffer->gapEnd + 1;
-        size_t leftSideLength = bufferPrefixLength(editor);
-        size_t rightSideLength = bufferSuffixLength(editor);
-
-        (editor)->stringCache = tempCache;
-
-        strncpy((editor)->stringCache->cache, (editor)->buffer->data, leftSideLength);
-        strncpy(editor->stringCache->cache + leftSideLength, (editor)->buffer->data + gapEndOffset, rightSideLength);
-
-        (editor)->stringCache->size = leftSideLength + rightSideLength;
-        (editor)->stringCache->cacheStatus = CacheStatusGood;
-    }
-}
-
 void insertChar(Editor* editor, const char c) {
     if (gapLength(editor) > 1) {
         (editor)->buffer->data[(editor)->buffer->gapStart++] = c;
@@ -130,6 +108,28 @@ void moveRight(Editor* editor) {
         (editor)->buffer->data[bufferGapStart(editor)] = c;
         (editor)->buffer->gapStart++;
         (editor)->buffer->gapEnd++;
+    }
+}
+
+void recalculateStringCache(Editor* editor) {
+    size_t newCacheSize = sizeof(StringCache) + bufferCapacity(editor);
+    StringCache* tempCache = (StringCache*)realloc((editor)->stringCache, newCacheSize);
+
+    if (tempCache == NULL) {
+        printf("PANIC: failed to reallocate the string cache\n");
+        exit(1);
+    } else {
+        size_t gapEndOffset = (editor)->buffer->gapEnd + 1;
+        size_t leftSideLength = bufferPrefixLength(editor);
+        size_t rightSideLength = bufferSuffixLength(editor);
+
+        (editor)->stringCache = tempCache;
+
+        strncpy((editor)->stringCache->cache, (editor)->buffer->data, leftSideLength);
+        strncpy(editor->stringCache->cache + leftSideLength, (editor)->buffer->data + gapEndOffset, rightSideLength);
+
+        (editor)->stringCache->size = leftSideLength + rightSideLength;
+        (editor)->stringCache->cacheStatus = CacheStatusGood;
     }
 }
 
