@@ -32,8 +32,8 @@ void initializeSDL(void) {
     }
 }
 
-void renderText(UI* ui, const char* text) {
-    if (strlen(text) == 0) {
+void renderText(UI* ui, const char* text, size_t textLength) {
+    if (strlen(text) == 0 || textLength == 0) {
         return;
     }
 
@@ -44,7 +44,7 @@ void renderText(UI* ui, const char* text) {
         .a = 255,
     };
 
-    SDL_Surface* textSurface = textSurface = TTF_RenderText_Solid((ui)->font, text, 0, color);
+    SDL_Surface* textSurface = textSurface = TTF_RenderText_Solid((ui)->font, text, textLength, color);
 
     if (textSurface == NULL) {
         printf("PANIC: failure creating text surface\n");
@@ -66,7 +66,6 @@ void renderText(UI* ui, const char* text) {
         printf("PANIC: failed to render texture\n");
         return;
     }
-    free(text);
     SDL_DestroySurface(textSurface);
     SDL_DestroyTexture(textImage);
 }

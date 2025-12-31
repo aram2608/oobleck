@@ -7,18 +7,10 @@ Editor *newEditor(int argc, char** argv) {
     (editor)->umkaContext = loadUmka("plugin.um", argc, argv);
     umkaRun((editor)->umkaContext);
 
-    bool ok = SDL_StartTextInput((editor)->ui->window);
-
-    if (!ok) {
-        printf("PANIC: failed to start capturing text input");
-        abort();
-    }
-
     return editor;
 }
 
 void destroyEditor(Editor* editor) {
-    SDL_StopTextInput((editor)->ui->window);
     destroyBuffer((editor)->buffer);
     destroyUI((editor)->ui);
     umkaFree((editor)->umkaContext);
@@ -116,7 +108,7 @@ void moveRight(Editor* editor) {
 char* toString(Editor* editor) {
     size_t rightSideLength = bufferSuffixLength(editor);
     size_t leftSideLength = bufferPrefixLength(editor);
-    size_t totalSize = rightSideLength + leftSideLength;
+    size_t totalSize = rightSideLength + leftSideLength + 10;
     size_t gapEnd = bufferGapEnd(editor);
 
     if (rightSideLength > 0) {
@@ -140,6 +132,7 @@ char* toString(Editor* editor) {
 
         strncpy(leftSide, (editor)->buffer->data, leftSideLength);
 
+        leftSide[leftSideLength] = '\0';
         return leftSide;
     }
 }

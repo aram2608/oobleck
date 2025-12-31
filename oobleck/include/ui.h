@@ -45,7 +45,7 @@ void initializeSDL(void);
  * @param ui A pointer to the UI structure
  * @param text The C string to be rendered to the window
  */
-void renderText(UI* ui, const char* text);
+void renderText(UI* ui, const char* text, size_t textLength);
 
 /**
  * @brief Function used to destroy the UI and cleanup allocated memory
