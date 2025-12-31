@@ -8,14 +8,8 @@ int main(int argc, char** argv) {
 
     bool run = true;
     SDL_Event event;
+    char c;
     while(run) {
-        char textBuffer[256] = "";
-        bool ok = SDL_StartTextInput((editor)->ui->window);
-        if (!ok) {
-            printf("PANIC: failed to start capturing text input");
-            abort();
-        }
-
         while(SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_EVENT_QUIT:
@@ -34,18 +28,16 @@ int main(int argc, char** argv) {
                     }
                     break;
                 case SDL_EVENT_TEXT_INPUT:
-                    strcat(textBuffer, event.text.text);
-                    insertString(editor, textBuffer);
+                    c = *event.text.text;
+                    insertChar(editor, c);
                     break;
             }
         }
-        SDL_StopTextInput((editor)->ui->window);
         SDL_SetRenderDrawColor((editor)->ui->renderer, 0, 0, 0, 0);
         SDL_RenderClear((editor)->ui->renderer);
-        renderText((editor)->ui, (editor)->buffer->data, (editor)->buffer->gapStart);
+        renderText((editor)->ui, toString(editor), stringSize(editor));
         SDL_RenderPresent((editor)->ui->renderer);
     }
-
     destroyEditor(editor);
     return 0;
 }

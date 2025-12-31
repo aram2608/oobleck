@@ -6,10 +6,10 @@
  * @brief Provides the definitions for the Editor and its utilities
  */
 
+#include "stringCache.h"
 #include "gapBuffer.h"
 #include "ui.h"
 #include "umkaPlugin.h"
-
 
 /// @struct Line
 /// @brief Structure to represent editor lines
@@ -23,6 +23,7 @@ typedef struct {
 typedef struct {
     UI* ui; /**< Pointer to UI, contains base window/rendering utils */
     GapBuffer* buffer; /**< Pointer to the gap buffer for storing text */
+    StringCache* stringCache;
     Umka* umkaContext; /**< Pointer to Umka, used for scripting layer */
 } Editor;
 
@@ -116,6 +117,8 @@ size_t bufferGapEnd(Editor* editor);
  */
 void resizeBuffer(Editor* editor, size_t newCapacity);
 
+void recalculateStringCache(Editor* editor);
+
 /**
  * @brief Function to insert a character into the buffer
  * 
@@ -160,5 +163,7 @@ void moveRight(Editor* editor);
 // -> Hello World
 // The caller needs to free memory for allocated resources
 char* toString(Editor* editor);
+
+size_t stringSize(Editor* editor);
 
 #endif // EDITOR_H

@@ -3,14 +3,22 @@
 Editor *newEditor(int argc, char** argv) {
     Editor* editor = (Editor*)malloc(sizeof(Editor));
     (editor)->buffer = newBuffer(BUFFER_SIZE);
+    (editor)->stringCache = newStringCache();
     (editor)->ui = createUI();
     (editor)->umkaContext = loadUmka("plugin.um", argc, argv);
     umkaRun((editor)->umkaContext);
+
+    bool ok = SDL_StartTextInput((editor)->ui->window);
+    if (!ok) {
+        printf("PANIC: failed to start capturing text input");
+        abort();
+    }
 
     return editor;
 }
 
 void destroyEditor(Editor* editor) {
+    SDL_StopTextInput((editor)->ui->window);
     destroyBuffer((editor)->buffer);
     destroyUI((editor)->ui);
     umkaFree((editor)->umkaContext);
@@ -41,9 +49,6 @@ size_t bufferGapEnd(Editor* editor) {
     return (editor)->buffer->gapEnd;
 }
 
-// TODO: Calculate the position of the string in memory so we can try and 
-// reconstruct our gap in the buffer
-
 void resizeBuffer(Editor* editor, size_t newCapacity) {
     size_t oldCapacity = bufferCapacity(editor);
     size_t capacityOffset = newCapacity - oldCapacity;
@@ -64,10 +69,32 @@ void resizeBuffer(Editor* editor, size_t newCapacity) {
     }
 }
 
+void recalculateStringCache(Editor* editor) {
+    size_t newCacheSize = sizeof(StringCache) + bufferCapacity(editor);
+    StringCache* tempCache = (StringCache*)realloc((editor)->stringCache, newCacheSize);
+
+    if (tempCache == NULL) {
+        printf("PANIC: failed to reallocate the string cache\n");
+        exit(1);
+    } else {
+        size_t gapEndOffset = (editor)->buffer->gapEnd + 1;
+        size_t leftSideLength = bufferPrefixLength(editor);
+        size_t rightSideLength = bufferSuffixLength(editor);
+
+        (editor)->stringCache = tempCache;
+
+        strncpy((editor)->stringCache->cache, (editor)->buffer->data, leftSideLength);
+        strncpy(editor->stringCache->cache + leftSideLength, (editor)->buffer->data + gapEndOffset, rightSideLength);
+
+        (editor)->stringCache->size = leftSideLength + rightSideLength;
+        (editor)->stringCache->cacheStatus = CacheStatusGood;
+    }
+}
+
 void insertChar(Editor* editor, const char c) {
     if (gapLength(editor) > 1) {
         (editor)->buffer->data[(editor)->buffer->gapStart++] = c;
-        toString(editor);
+        (editor)->stringCache->cacheStatus = CacheStatusBad;
     } else {
         resizeBuffer(editor, bufferCapacity(editor) * 2);
         insertChar(editor, c);
@@ -84,6 +111,7 @@ void insertString(Editor* editor, const char* str) {
 void backspace(Editor* editor) {
     if (bufferGapStart(editor) > 0) {
         (editor)->buffer->gapStart--;
+        (editor)->stringCache->cacheStatus = CacheStatusBad;
     }
 }
 
@@ -106,33 +134,14 @@ void moveRight(Editor* editor) {
 }
 
 char* toString(Editor* editor) {
-    size_t rightSideLength = bufferSuffixLength(editor);
-    size_t leftSideLength = bufferPrefixLength(editor);
-    size_t totalSize = rightSideLength + leftSideLength + 10;
-    size_t gapEnd = bufferGapEnd(editor);
-
-    if (rightSideLength > 0) {
-        char* leftSide = (char*)malloc(leftSideLength);
-        char* rightSide = (char*)malloc(rightSideLength);
-
-        strncpy(leftSide, (editor)->buffer->data, leftSideLength);
-        strncpy(rightSide, (editor)->buffer->data + gapEnd + 1, rightSideLength);
-
-        char* fullString = (char*)malloc(totalSize);
-        strncat(fullString, leftSide, leftSideLength);
-        strncat(fullString, rightSide, rightSideLength);
-
-        free(leftSide);
-        free(rightSide);
-
-        fullString[totalSize] = '\0';
-        return fullString;
+    if ((editor)->stringCache->cacheStatus == CacheStatusGood) {
+        return (editor)->stringCache->cache;
     } else {
-        char* leftSide = (char*)malloc(leftSideLength);
-
-        strncpy(leftSide, (editor)->buffer->data, leftSideLength);
-
-        leftSide[leftSideLength] = '\0';
-        return leftSide;
+        recalculateStringCache(editor);
+        return (editor)->stringCache->cache;
     }
+}
+
+size_t stringSize(Editor* editor) {
+    return (editor)->stringCache->size;
 }
