@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
                     break;
                 case SDL_EVENT_TEXT_INPUT:
                     c = *event.text.text;
-                    insertChar(editor->buffer, c);
+                    insertChar(editor, c);
                     break;
             }
         }

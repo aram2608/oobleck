@@ -48,14 +48,14 @@ void renderText(UI* ui, const char* text, size_t textSize) {
 
     if (textSurface == NULL) {
         printf("PANIC: failure creating text surface");
-        abort();
+        return;
     }
 
     SDL_Texture* textImage = textImage = SDL_CreateTextureFromSurface((ui)->renderer, textSurface);
 
     SDL_FRect textRect = {
-        .h = textSurface->h * 3,
-        .w = textSurface->w * 3,
+        .h = textSurface->h * 5,
+        .w = textSurface->w * 5,
         .x = 0,
         .y = 0,
     };
@@ -63,8 +63,8 @@ void renderText(UI* ui, const char* text, size_t textSize) {
     bool ok = SDL_RenderTexture((ui)->renderer, textImage, NULL, &textRect);
 
     if (!ok) {
-        printf("Failed to render texture\n");
-        abort();
+        printf("PANIC: failed to render texture\n");
+        return;
     }
 
     SDL_DestroySurface(textSurface);

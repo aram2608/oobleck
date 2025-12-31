@@ -38,4 +38,40 @@ Editor* newEditor(int argc, char** argv);
  */
 void destroyEditor(Editor* editor);
 
+/**
+ * @brief Function to resize the gap buffer
+ * 
+ * A general rule of thumb is to double the size of the buffer as follows
+ * strlen(buff->data) * 2
+ * 
+ * @param editor A pointer to the editor
+ * @param newCapacity The new size desired for the buffer
+ */
+void resizeBuffer(Editor* editor, size_t newCapacity);
+
+/**
+ * @brief Function to insert a character into the buffer
+ * 
+ * @param editor A pointer to the editor
+ * @param c The character to be inserted
+ */
+void insertChar(Editor* editor, const char c);
+
+/**
+ * @brief Function to insert an entire C string into the buffer
+ * 
+ * Is simply a wrapper for the insertChar function
+ * 
+ * @param editor A pointer to the editor
+ * @param str The string to be inserted
+ */
+void insertString(Editor* editor, const char* str);
+
+/**
+ * @brief A function to remove a character from the buffer following a backspace
+ * 
+ * @param editor A pointer to the editor
+ */
+void backspace(Editor* editor);
+
 #endif // EDITOR_H
