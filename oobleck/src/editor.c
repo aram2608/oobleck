@@ -55,6 +55,7 @@ size_t bufferGapEnd(Editor* editor) {
 void resizeBuffer(Editor* editor, size_t newCapacity) {
     size_t oldCapacity = bufferCapacity(editor);
     size_t rightSideLength = bufferSuffixLength(editor);
+    size_t capacityOffset = newCapacity - oldCapacity;
 
     GapBuffer* tempBuff = (GapBuffer*)realloc((editor)->buffer, sizeof(GapBuffer) + newCapacity * sizeof(char));
     printf("Resized\n");
@@ -67,8 +68,7 @@ void resizeBuffer(Editor* editor, size_t newCapacity) {
 
         // I don't know if this calculation is right honestly
         // TODO: Map out the math here a bit better so we don't seg fault
-        size_t offset = newCapacity - bufferCapacity(editor);
-        (editor)->buffer->gapEnd = bufferGapStart(editor); + offset;
+        (editor)->buffer->gapEnd = bufferGapStart(editor) + capacityOffset;
         (editor)->buffer->capacity = newCapacity;
     }
 }
@@ -98,33 +98,42 @@ void backspace(Editor* editor) {
 
 void moveLeft(Editor* editor) {
     if (bufferGapStart(editor) > 0) {
-        const char c = (editor)->buffer->data[(editor)->buffer->gapStart - 1];
-        (editor)->buffer->data[editor->buffer->gapEnd] = c;
+        const char c = (editor)->buffer->data[bufferGapStart(editor) - 1];
+        (editor)->buffer->data[bufferGapEnd(editor)] = c;
         (editor)->buffer->gapStart--;
         (editor)->buffer->gapEnd--;
     }
 }
 
 void moveRight(Editor* editor) {
-    if ((editor)->buffer->gapEnd < (editor)->buffer->capacity) {
-        const char c = (editor)->buffer->data[(editor)->buffer->gapEnd + 1];
-        (editor)->buffer->data[(editor)->buffer->gapStart] = c;
+    if (bufferGapEnd(editor) < bufferCapacity(editor)) {
+        const char c = (editor)->buffer->data[bufferGapEnd(editor) + 1];
+        (editor)->buffer->data[bufferGapStart(editor)] = c;
         (editor)->buffer->gapStart++;
         (editor)->buffer->gapEnd++;
     }
 }
 
 void toString(Editor* editor) {
-    size_t oldCapacity = (editor)->buffer->capacity;
+    size_t oldCapacity = bufferCapacity(editor);
     size_t rightSideLength = bufferSuffixLength(editor);
+    size_t leftSideLength = bufferPrefixLength(editor);
+    size_t totalSize = rightSideLength + leftSideLength;
 
     if (rightSideLength > 0) {
-        char* leftSide = (char*)malloc((editor)->buffer->gapStart + 10);
-        strncpy(leftSide, (editor)->buffer->data, bufferPrefixLength(editor));
+        char* leftSide = (char*)malloc(leftSideLength);
+        char* rightSide = (char*)malloc(rightSideLength);
+
+        strncpy(leftSide, (editor)->buffer->data, leftSideLength);
+        strncpy(rightSide, (editor)->buffer->data, rightSideLength);
+
         free(leftSide);
+        free(rightSide);
     } else {
-        char* leftSide = (char*)malloc((editor)->buffer->gapStart + 10);
-        strncpy(leftSide, (editor)->buffer->data, bufferPrefixLength(editor));
+        char* leftSide = (char*)malloc(leftSideLength);
+
+        strncpy(leftSide, (editor)->buffer->data, leftSideLength);
+
         free(leftSide);
     }
 }
