@@ -26,8 +26,13 @@ void destroyEditor(Editor* editor) {
 }
 
 void resizeBuffer(Editor* editor, size_t newCapacity) {
-    // char leftSide[strlen(buff->data)];
-    // char rightSide[strlen(buff->data)];
+    // char leftSide[strlen(editor->buffer->data)];
+    // char rightSide[strlen(editor->buffer->data)];
+
+    // memcpy(leftSide, editor->buffer->data, editor->buffer->gapStart);
+    // memcpy(rightSide, editor->buffer->data);
+
+    // printf("Left side: %s\n", leftSide);
 
     GapBuffer* tempBuff = (GapBuffer*)realloc((editor)->buffer, sizeof(GapBuffer) + newCapacity * sizeof(char));
     printf("Resized\n");
