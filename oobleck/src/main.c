@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
         }
         SDL_SetRenderDrawColor((editor)->ui->renderer, 0, 0, 0, 0);
         SDL_RenderClear((editor)->ui->renderer);
-        renderText((editor)->ui, (editor)->buffer->data, (editor)->buffer->gapStart);
+        renderText((editor)->ui, toString(editor));
         SDL_RenderPresent((editor)->ui->renderer);
     }
 

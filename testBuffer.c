@@ -38,7 +38,7 @@ void insertChar(GapBuffer* buffer, const char c) {
 
 void insertString(GapBuffer* buffer, const char* str) {
     size_t stringSize = strlen(str);
-    for (size_t i = 0; i <= stringSize - 1; i++) {
+    for (size_t i = 0; i <= stringSize; i++) {
         insertChar(buffer, str[i]);
     }
 }
@@ -46,12 +46,15 @@ void insertString(GapBuffer* buffer, const char* str) {
 void bufferSizes(GapBuffer* buffer) {
     size_t leftSideLength = (buffer)->gapStart;
     size_t rightSideLength = (buffer)->capacity - (buffer)->gapEnd;
+    size_t gapEnd = (buffer)->gapEnd;
 
-    printf("Left Side Length: %zu\nRight Side Length: %zu\n", leftSideLength, rightSideLength);
+    printf("Left Side Length: %zu\nRight Side Length: %zu\nGap end: %zu\n", leftSideLength, rightSideLength, gapEnd);
 }
 
-void dumpBuffer(GapBuffer* buffer) {
-    printf("%s\n", buffer->data);
+void dumpBufferMemory(GapBuffer* buffer) {
+    for (size_t it = 0; it <= (buffer)->capacity; it++) {
+        printf("Memory: %p at index: %zu for character %c\n", &(buffer)->data[it], it, (buffer)->data[it]);
+    }
 }
 
 void toString(GapBuffer* buffer) {
@@ -63,9 +66,13 @@ void toString(GapBuffer* buffer) {
         char* rightSide = (char*)malloc(rightSideLength);
 
         strncpy(leftSide, (buffer)->data, leftSideLength);
-        strncpy(rightSide, (buffer)->data, rightSideLength);
+        strncpy(rightSide, (buffer)->data + (buffer)->gapEnd + 1, rightSideLength);
 
-        printf("Left Side: %s\n Right Side: %s\n", leftSide, rightSide);
+        leftSide[leftSideLength] = '\0';
+        rightSide[rightSideLength] = '\0';
+
+        size_t gapEnd = (buffer)->gapEnd;
+        printf("Left Side: %s\nRight Side: %s\nChar at gap end: %c\n", leftSide, rightSide, (buffer)->data[gapEnd + 1]);
 
         free(leftSide);
         free(rightSide);
@@ -74,19 +81,46 @@ void toString(GapBuffer* buffer) {
 
         strncpy(leftSide, (buffer)->data, leftSideLength);
 
+        leftSide[leftSideLength] = '\0';
+
         printf("Left Side: %s\n", leftSide);
         free(leftSide);
     }
 }
 
-int main() {
+void moveLeft(GapBuffer* buffer) {
+    if ((buffer)->gapStart > 0) {
+        const char c = (buffer)->data[(buffer)->gapStart - 1];
+        buffer->data[(buffer)->gapEnd] = c;
+        buffer->data[buffer->gapStart - 1] = '*';
+        buffer->gapStart--;
+        buffer->gapEnd--;
+    }
+}
+
+int main(void) {
     GapBuffer* buffer = newBuffer(INITIAL_CAPACITY);
     insertString(buffer, "Hello world!");
+    printf("Hello World! Length: %zu\n", strlen("Hello world!"));
 
-    dumpBuffer(buffer);
     bufferSizes(buffer);
 
     toString(buffer);
+
+    moveLeft(buffer);
+    moveLeft(buffer);
+    moveLeft(buffer);
+    moveLeft(buffer);
+
+    printf("--------------Post move--------------\n");
+
+    bufferSizes(buffer);
+
+    toString(buffer);
+
+    printf("--------------Memory--------------\n");
+
+    dumpBufferMemory(buffer);
 
     destroyBuffer(buffer);
     return 0;

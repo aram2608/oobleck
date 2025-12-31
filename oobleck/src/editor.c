@@ -113,25 +113,33 @@ void moveRight(Editor* editor) {
     }
 }
 
-void toString(Editor* editor) {
+char* toString(Editor* editor) {
     size_t rightSideLength = bufferSuffixLength(editor);
     size_t leftSideLength = bufferPrefixLength(editor);
     size_t totalSize = rightSideLength + leftSideLength;
+    size_t gapEnd = bufferGapEnd(editor);
 
     if (rightSideLength > 0) {
         char* leftSide = (char*)malloc(leftSideLength);
         char* rightSide = (char*)malloc(rightSideLength);
 
         strncpy(leftSide, (editor)->buffer->data, leftSideLength);
-        strncpy(rightSide, (editor)->buffer->data, rightSideLength);
+        strncpy(rightSide, (editor)->buffer->data + gapEnd + 1, rightSideLength);
+
+        char* fullString = (char*)malloc(totalSize);
+        strncat(fullString, leftSide, leftSideLength);
+        strncat(fullString, rightSide, rightSideLength);
 
         free(leftSide);
         free(rightSide);
+
+        fullString[totalSize] = '\0';
+        return fullString;
     } else {
         char* leftSide = (char*)malloc(leftSideLength);
 
         strncpy(leftSide, (editor)->buffer->data, leftSideLength);
 
-        free(leftSide);
+        return leftSide;
     }
 }

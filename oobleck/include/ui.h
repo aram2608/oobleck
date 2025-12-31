@@ -40,11 +40,12 @@ void initializeSDL(void);
 /**
  * @brief Function used to render the Gap Buffer's text to the window
  * 
+ * The text should be null terminated so the length is not strictly required
+ * 
  * @param ui A pointer to the UI structure
  * @param text The C string to be rendered to the window
- * @param textSize The size of the string
  */
-void renderText(UI* ui, const char* text, size_t textSize);
+void renderText(UI* ui, const char* text);
 
 /**
  * @brief Function used to destroy the UI and cleanup allocated memory

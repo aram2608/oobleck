@@ -159,6 +159,6 @@ void moveRight(Editor* editor);
 // H e l l o - - - - -  W o r l d
 // -> Hello World
 // The caller needs to free memory for allocated resources
-void toString(Editor* editor);
+char* toString(Editor* editor);
 
 #endif // EDITOR_H
