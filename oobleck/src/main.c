@@ -20,6 +20,10 @@ int main(int argc, char** argv) {
                 case SDL_EVENT_KEY_DOWN:
                     if (event.key.key == SDLK_BACKSPACE) {
                         backspace(editor);
+                    } else if (event.key.key == SDLK_LEFT) {
+                        moveLeft(editor);
+                    } else if (event.key.key == SDLK_RIGHT) {
+                        moveRight(editor);
                     } else if (event.key.key == SDLK_ESCAPE) {
                         run = false;
                         break;
@@ -35,7 +39,6 @@ int main(int argc, char** argv) {
         SDL_RenderClear(editor->ui->renderer);
         renderText(editor->ui, editor->buffer->data, editor->buffer->gapStart);
         SDL_RenderPresent(editor->ui->renderer);
-        SDL_Delay(20);
     }
 
     destroyEditor(editor);

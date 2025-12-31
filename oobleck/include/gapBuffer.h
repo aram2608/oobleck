@@ -11,8 +11,9 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define BUFFER_SIZE 50
+#define BUFFER_SIZE 100
 
+/// @struct GapBuffer
 /// @brief Structure to represent the Gap Buffer.
 typedef struct {
     size_t capacity; /** The total capacity/size of the buffer */

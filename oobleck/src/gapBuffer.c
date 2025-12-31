@@ -14,10 +14,6 @@ GapBuffer* newBuffer(size_t initialCapacity) {
     return buff;
 }
 
-char* toString(GapBuffer* buff) {
-    return "Hello world";
-}
-
 void destroyBuffer(GapBuffer* buff) {
     free(buff);
     buff = NULL;

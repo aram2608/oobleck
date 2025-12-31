@@ -11,12 +11,14 @@
 #include "umkaPlugin.h"
 
 
+/// @struct Line
 /// @brief Structure to represent editor lines
 typedef struct {
     size_t begin;
     size_t end;
 } Line;
 
+/// @struct Editor
 /// @brief Structure to store editor specific objects
 typedef struct {
     UI* ui; /**< Pointer to UI, contains base window/rendering utils */
@@ -42,7 +44,7 @@ void destroyEditor(Editor* editor);
  * @brief Function to resize the gap buffer
  * 
  * A general rule of thumb is to double the size of the buffer as follows
- * strlen(buff->data) * 2
+ * (editor)->buffer->capacity * 2
  * 
  * @param editor A pointer to the editor
  * @param newCapacity The new size desired for the buffer
@@ -73,5 +75,19 @@ void insertString(Editor* editor, const char* str);
  * @param editor A pointer to the editor
  */
 void backspace(Editor* editor);
+
+/**
+ * @brief Function to move the cursor left
+ * @param editor A pointer to the editor
+ */
+void moveLeft(Editor* editor);
+
+/**
+ * @brief Function to move the cursor right
+ * @param editor A pointer to the editor
+ */
+void moveRight(Editor* editor);
+
+void toString(Editor* editor);
 
 #endif // EDITOR_H
