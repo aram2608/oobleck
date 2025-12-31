@@ -14,7 +14,8 @@
 #include <SDL3_ttf/SDL_ttf.h>
 
 #define WINDOW_PARAMS SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY
-
+#define WINDOW_WIDTH 600
+#define WINDOW_HEIGHT 600
 
 /// @brief Structure to store SDL components needed for rendering
 typedef struct {

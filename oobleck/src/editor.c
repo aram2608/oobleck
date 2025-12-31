@@ -54,7 +54,6 @@ size_t bufferGapEnd(Editor* editor) {
 
 void resizeBuffer(Editor* editor, size_t newCapacity) {
     size_t oldCapacity = bufferCapacity(editor);
-    size_t rightSideLength = bufferSuffixLength(editor);
     size_t capacityOffset = newCapacity - oldCapacity;
 
     GapBuffer* tempBuff = (GapBuffer*)realloc((editor)->buffer, sizeof(GapBuffer) + newCapacity * sizeof(char));
@@ -115,7 +114,6 @@ void moveRight(Editor* editor) {
 }
 
 void toString(Editor* editor) {
-    size_t oldCapacity = bufferCapacity(editor);
     size_t rightSideLength = bufferSuffixLength(editor);
     size_t leftSideLength = bufferPrefixLength(editor);
     size_t totalSize = rightSideLength + leftSideLength;

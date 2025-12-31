@@ -11,7 +11,7 @@ UI* createUI(void) {
         abort();
     }
 
-    (ui)->window = SDL_CreateWindow("oobleck", 600, 600, WINDOW_PARAMS);
+    (ui)->window = SDL_CreateWindow("oobleck", WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_PARAMS);
     (ui)->renderer = SDL_CreateRenderer((ui)->window, NULL);
     return ui;
 }
@@ -47,7 +47,7 @@ void renderText(UI* ui, const char* text, size_t textSize) {
     SDL_Surface* textSurface = textSurface = TTF_RenderText_Solid((ui)->font, text, textSize, color);
 
     if (textSurface == NULL) {
-        printf("PANIC: failure creating text surface");
+        printf("PANIC: failure creating text surface\n");
         return;
     }
 
