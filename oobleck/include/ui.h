@@ -48,6 +48,13 @@ void initializeSDL(void);
 void renderText(UI* ui, const char* text, size_t textLength);
 
 /**
+ * @brief Function used to render to cursor
+ * @param ui A pointer to the UI structure
+ * @param cursorPos The current cursor position (ie. that gap start)
+ */
+void renderCursor(UI* ui, size_t cursorPos);
+
+/**
  * @brief Function used to destroy the UI and cleanup allocated memory
  */
 void destroyUI(UI* ui);

@@ -32,6 +32,24 @@ void initializeSDL(void) {
     }
 }
 
+void renderCursor(UI* ui, size_t cursorPos) {
+    SDL_FRect textRect = {
+        .h = 50,
+        .w = 30,
+        .x = cursorPos * 30,
+        .y = 0,
+    };
+
+    SDL_SetRenderDrawColor((ui)->renderer, 255, 255, 255, 255);
+
+    bool ok = SDL_RenderFillRect((ui)->renderer, &textRect);
+
+    if (!ok) {
+        printf("PANIC: failed to render cursor");
+        return;
+    }
+}
+
 void renderText(UI* ui, const char* text, size_t textLength) {
     if (strlen(text) == 0 || textLength == 0) {
         return;
@@ -66,6 +84,7 @@ void renderText(UI* ui, const char* text, size_t textLength) {
         printf("PANIC: failed to render texture\n");
         return;
     }
+
     SDL_DestroySurface(textSurface);
     SDL_DestroyTexture(textImage);
 }

@@ -36,6 +36,7 @@ int main(int argc, char** argv) {
         SDL_SetRenderDrawColor((editor)->ui->renderer, 0, 0, 0, 0);
         SDL_RenderClear((editor)->ui->renderer);
         renderText((editor)->ui, toString(editor), stringSize(editor));
+        renderCursor((editor)->ui, (editor)->buffer->gapStart);
         SDL_RenderPresent((editor)->ui->renderer);
     }
     destroyEditor(editor);
