@@ -62,14 +62,14 @@ void renderText(UI* ui, const char* text, size_t textLength) {
         .a = 255,
     };
 
-    SDL_Surface* textSurface = textSurface = TTF_RenderText_Solid((ui)->font, text, textLength, color);
+    SDL_Surface* textSurface = TTF_RenderText_Solid_Wrapped((ui)->font, text, textLength, color, WINDOW_WIDTH);
 
     if (textSurface == NULL) {
         printf("PANIC: failure creating text surface\n");
         return;
     }
 
-    SDL_Texture* textImage = textImage = SDL_CreateTextureFromSurface((ui)->renderer, textSurface);
+    SDL_Texture* textImage = SDL_CreateTextureFromSurface((ui)->renderer, textSurface);
 
     SDL_FRect textRect = {
         .h = textSurface->h * 5,

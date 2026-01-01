@@ -22,6 +22,8 @@ int main(int argc, char** argv) {
                         moveLeft(editor);
                     } else if (event.key.key == SDLK_RIGHT) {
                         moveRight(editor);
+                    } else if (event.key.key == SDLK_RETURN || event.key.key == SDLK_RETURN2) {
+                        insertChar(editor, '\n');
                     } else if (event.key.key == SDLK_ESCAPE) {
                         run = false;
                         break;
