@@ -7,23 +7,18 @@
  */
 
 #include "stringCache.h"
+#include "lineIndex.h"
 #include "gapBuffer.h"
 #include "ui.h"
 #include "umkaPlugin.h"
-
-/// @struct Line
-/// @brief Structure to represent editor lines
-typedef struct {
-    size_t begin;
-    size_t end;
-} Line;
 
 /// @struct Editor
 /// @brief Structure to store editor specific objects
 typedef struct {
     UI* ui; /**< Pointer to UI, contains base window/rendering utils */
     GapBuffer* buffer; /**< Pointer to the gap buffer for storing text */
-    StringCache* stringCache;
+    LineIndex* lineIndex; /** Pointer to line index */
+    StringCache* stringCache; /** Pointer to the String Cache */
     Umka* umkaContext; /**< Pointer to Umka, used for scripting layer */
 } Editor;
 
@@ -179,5 +174,7 @@ char* toString(Editor* editor);
  * @return The size of the cached string
  */
 size_t stringSize(Editor* editor);
+
+void incrementLine(Editor* editor, int lineIndex);
 
 #endif // EDITOR_H

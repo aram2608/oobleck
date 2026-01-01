@@ -52,7 +52,7 @@ void renderText(UI* ui, const char* text, size_t textLength);
  * @param ui A pointer to the UI structure
  * @param cursorPos The current cursor position (ie. that gap start)
  */
-void renderCursor(UI* ui, size_t cursorPos);
+void renderCursor(UI* ui, size_t cursorPos, size_t lineIndex);
 
 /**
  * @brief Function used to destroy the UI and cleanup allocated memory

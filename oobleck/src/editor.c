@@ -4,6 +4,7 @@ Editor *newEditor(int argc, char** argv) {
     Editor* editor = (Editor*)malloc(sizeof(Editor));
     (editor)->buffer = newBuffer(BUFFER_SIZE);
     (editor)->stringCache = newStringCache();
+    (editor)->lineIndex = newLineIndex();
     (editor)->ui = createUI();
     (editor)->umkaContext = loadUmka("plugin.um", argc, argv);
     umkaRun((editor)->umkaContext);
@@ -21,6 +22,8 @@ void destroyEditor(Editor* editor) {
     SDL_StopTextInput((editor)->ui->window);
     destroyBuffer((editor)->buffer);
     destroyUI((editor)->ui);
+    destroyLineIndex((editor)->lineIndex);
+    destroyStringCache((editor)->stringCache);
     umkaFree((editor)->umkaContext);
     free(editor);
 }
@@ -144,4 +147,14 @@ char* toString(Editor* editor) {
 
 size_t stringSize(Editor* editor) {
     return (editor)->stringCache->size;
+}
+
+void incrementLine(Editor* editor, int newIndex) {
+    if(editor->lineIndex->capacity > editor->lineIndex->lineCount) {
+        (editor)->lineIndex->lines[(editor)->lineIndex->lineCount++] = newIndex;
+        (editor)->lineIndex->currentLine++;
+        printf("New Index: %d\n", newIndex);
+    } else {
+        printf("Index needs resized\n");
+    }
 }

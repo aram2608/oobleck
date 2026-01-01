@@ -24,6 +24,7 @@ int main(int argc, char** argv) {
                         moveRight(editor);
                     } else if (event.key.key == SDLK_RETURN || event.key.key == SDLK_RETURN2) {
                         insertChar(editor, '\n');
+                        incrementLine(editor, (int)bufferGapStart(editor));
                     } else if (event.key.key == SDLK_ESCAPE) {
                         run = false;
                         break;
@@ -38,7 +39,7 @@ int main(int argc, char** argv) {
         SDL_SetRenderDrawColor((editor)->ui->renderer, 0, 0, 0, 0);
         SDL_RenderClear((editor)->ui->renderer);
         renderText((editor)->ui, toString(editor), stringSize(editor));
-        renderCursor((editor)->ui, (editor)->buffer->gapStart);
+        renderCursor((editor)->ui, bufferGapStart(editor), (editor)->lineIndex->currentLine);
         SDL_RenderPresent((editor)->ui->renderer);
     }
     destroyEditor(editor);

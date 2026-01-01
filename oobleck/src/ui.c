@@ -32,13 +32,22 @@ void initializeSDL(void) {
     }
 }
 
-void renderCursor(UI* ui, size_t cursorPos) {
-    SDL_FRect textRect = {
-        .h = 50,
-        .w = 30,
-        .x = cursorPos * 30,
-        .y = 0,
-    };
+void renderCursor(UI* ui, size_t cursorPos, size_t lineIndex) {
+    SDL_FRect textRect = {0};
+
+    // This is a bit of a hack but i dont know how else to calculate the
+    // y position
+    if(lineIndex > 0) {
+        textRect.h = 50;
+        textRect.w = 30;
+        textRect.x = cursorPos * 30;
+        textRect.y = 75 * lineIndex;
+    } else {
+        textRect.h = 50;
+        textRect.w = 30;
+        textRect.x = cursorPos * 30;
+        textRect.y = 50 * lineIndex;
+    }
 
     SDL_SetRenderDrawColor((ui)->renderer, 255, 255, 255, 255);
 
