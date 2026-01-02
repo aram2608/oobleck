@@ -2,7 +2,7 @@
 #define GAP_BUFFER_H
 
 /**
- * @file gapBuffer.h
+ * @headerfile gap_buffer.h
  * @brief Provides the definitions for the Gap Buffer and its utilities
  */
 

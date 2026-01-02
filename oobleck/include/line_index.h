@@ -1,6 +1,11 @@
 #ifndef LINE_INDEX_H
 #define LINE_INDEX_H
 
+/**
+ * @headerfile line_index.h
+ * 
+ */
+
 #include <stdlib.h>
 
 #define INITIAL_LINE_INDEX_SIZE 25

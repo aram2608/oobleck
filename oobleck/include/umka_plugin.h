@@ -2,7 +2,7 @@
 #define UMKA_PLUGIN_H
 
 /**
- * @file umkaPlugin.h
+ * @headerfile umka_plugin.h
  * @brief Provides wrapper functions for the creation of an Umka context for editor plugin purposes
  */
 

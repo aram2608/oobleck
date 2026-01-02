@@ -2,7 +2,7 @@
 #define UI_H
 
 /**
- * @file ui.h
+ * @headerfile ui.h
  * @brief Provides the definitions for the UI and its utilities
  */
 

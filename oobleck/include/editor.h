@@ -2,7 +2,7 @@
 #define EDITOR_H
 
 /**
- * @file editor.h
+ * @headerfile editor.h
  * @brief Provides the definitions for the Editor and its utilities
  */
 

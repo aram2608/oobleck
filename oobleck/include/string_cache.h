@@ -1,6 +1,10 @@
 #ifndef STRING_CACHE_H
 #define STRING_CACHE_H
 
+/**
+ * @headerfile string_cache.h
+ */
+
 #include <stdlib.h>
 
 /// @enum CacheStatus
