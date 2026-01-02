@@ -1,4 +1,4 @@
-#include "../include/gapBuffer.h"
+#include "../include/gap_buffer.h"
 
 GapBuffer* newBuffer(size_t initialCapacity) {
     GapBuffer *buff = (GapBuffer*)malloc(sizeof(GapBuffer) + initialCapacity * sizeof(char));

@@ -1,4 +1,4 @@
-#include "../include/stringCache.h"
+#include "../include/string_cache.h"
 
 StringCache* newStringCache(void) {
     StringCache* stringCache = (StringCache*)malloc(sizeof(StringCache) + sizeof(char));

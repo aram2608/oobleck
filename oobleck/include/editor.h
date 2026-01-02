@@ -6,11 +6,11 @@
  * @brief Provides the definitions for the Editor and its utilities
  */
 
-#include "stringCache.h"
-#include "lineIndex.h"
-#include "gapBuffer.h"
+#include "string_cache.h"
+#include "line_index.h"
+#include "gap_buffer.h"
 #include "ui.h"
-#include "umkaPlugin.h"
+#include "umka_plugin.h"
 
 /// @struct Editor
 /// @brief Structure to store editor specific objects

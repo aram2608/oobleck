@@ -1,4 +1,4 @@
-#include "../include/lineIndex.h"
+#include "../include/line_index.h"
 
 LineIndex* newLineIndex(void) {
     LineIndex* lineIndex = (LineIndex*)malloc(sizeof(LineIndex) + INITIAL_LINE_INDEX_SIZE * sizeof(int));

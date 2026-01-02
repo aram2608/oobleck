@@ -4,7 +4,7 @@ CC := gcc
 # Build directory and target
 APP := ./oobleck
 BUILD_DIR := ./build
-TARGET := main
+TARGET := oobleck
 
 # Source directory and source files
 SRC_DIR := $(APP)/src

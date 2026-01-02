@@ -1,4 +1,4 @@
-#include "../include/umkaPlugin.h"
+#include "../include/umka_plugin.h"
 
 Umka* loadUmka(const char* filePath, int argc, char** argv) {
     int stackSize = 4096;
