@@ -3,7 +3,7 @@
 
 /**
  * @headerfile line_index.h
- * 
+ * @brief Implementation for the line index
  */
 
 #include <stdlib.h>
@@ -18,13 +18,13 @@ typedef struct {
 /// @struct LineIndex
 /// @brief Structure to represent editor line index
 typedef struct {
-    size_t capacity;
-    size_t lineCount;
-    size_t currentLine;
+    size_t capacity; /** Array capacity */
+    size_t line_count; /** Keep track of the current buffer position */
+    size_t current_line; /** The current line being editted */
     int lines[];
 } LineIndex;
 
-LineIndex* newLineIndex(void);
-void destroyLineIndex(LineIndex* lineIndex);
+LineIndex* NewLineIndex(void);
+void DestroyLineIndex(LineIndex* line_index);
 
 #endif

@@ -4,44 +4,46 @@
 #include <SDL3/SDL_main.h>
 
 int main(int argc, char** argv) {
-    Editor* editor = newEditor(argc, argv);
+  Editor* editor = NewEditor(argc, argv);
 
-    bool run = true;
-    SDL_Event event;
-    char c;
-    while(run) {
-        while(SDL_PollEvent(&event)) {
-            switch (event.type) {
-                case SDL_EVENT_QUIT:
-                    run = false;
-                    break;
-                case SDL_EVENT_KEY_DOWN:
-                    if (event.key.key == SDLK_BACKSPACE) {
-                        backspace(editor);
-                    } else if (event.key.key == SDLK_LEFT) {
-                        moveLeft(editor);
-                    } else if (event.key.key == SDLK_RIGHT) {
-                        moveRight(editor);
-                    } else if (event.key.key == SDLK_RETURN || event.key.key == SDLK_RETURN2) {
-                        insertChar(editor, '\n');
-                        incrementLine(editor, (int)bufferGapStart(editor));
-                    } else if (event.key.key == SDLK_ESCAPE) {
-                        run = false;
-                        break;
-                    }
-                    break;
-                case SDL_EVENT_TEXT_INPUT:
-                    c = *event.text.text;
-                    insertChar(editor, c);
-                    break;
-            }
-        }
-        SDL_SetRenderDrawColor((editor)->ui->renderer, 0, 0, 0, 0);
-        SDL_RenderClear((editor)->ui->renderer);
-        renderText((editor)->ui, toString(editor), stringSize(editor));
-        renderCursor((editor)->ui, bufferGapStart(editor), (editor)->lineIndex->currentLine);
-        SDL_RenderPresent((editor)->ui->renderer);
+  bool run = true;
+  SDL_Event event;
+  char c;
+  while (run) {
+    while (SDL_PollEvent(&event)) {
+      switch (event.type) {
+        case SDL_EVENT_QUIT:
+          run = false;
+          break;
+        case SDL_EVENT_KEY_DOWN:
+          if (event.key.key == SDLK_BACKSPACE) {
+            Backspace(editor);
+          } else if (event.key.key == SDLK_LEFT) {
+            MoveLeft(editor);
+          } else if (event.key.key == SDLK_RIGHT) {
+            MoveRight(editor);
+          } else if (event.key.key == SDLK_RETURN ||
+                     event.key.key == SDLK_RETURN2) {
+            InsertChar(editor, '\n');
+            IncrementLine(editor, (int)BufferGapStart(editor));
+          } else if (event.key.key == SDLK_ESCAPE) {
+            run = false;
+            break;
+          }
+          break;
+        case SDL_EVENT_TEXT_INPUT:
+          c = *event.text.text;
+          InsertChar(editor, c);
+          break;
+      }
     }
-    destroyEditor(editor);
-    return 0;
+    SDL_SetRenderDrawColor((editor)->ui->renderer, 0, 0, 0, 0);
+    SDL_RenderClear((editor)->ui->renderer);
+    RenderText((editor)->ui, ToString(editor), StringSize(editor));
+    RenderCursor((editor)->ui, BufferGapStart(editor),
+                 (editor)->line_index->current_line);
+    SDL_RenderPresent((editor)->ui->renderer);
+  }
+  DestroyEditor(editor);
+  return 0;
 }

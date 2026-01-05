@@ -1,160 +1,165 @@
 #include "../include/editor.h"
 
-Editor *newEditor(int argc, char** argv) {
-    Editor* editor = (Editor*)malloc(sizeof(Editor));
-    (editor)->buffer = newBuffer(BUFFER_SIZE);
-    (editor)->stringCache = newStringCache();
-    (editor)->lineIndex = newLineIndex();
-    (editor)->ui = createUI();
-    (editor)->umkaContext = loadUmka("plugin.um", argc, argv);
-    umkaRun((editor)->umkaContext);
+Editor* NewEditor(int argc, char** argv) {
+  Editor* editor = (Editor*)malloc(sizeof(Editor));
+  (editor)->buffer = NewBuffer(BUFFER_SIZE);
+  (editor)->str_cache = NewStringCache();
+  (editor)->line_index = NewLineIndex();
+  (editor)->ui = CreateUI();
+  (editor)->umka_context = LoadUmka("plugin.um", argc, argv);
+  umkaRun((editor)->umka_context);
 
-    bool ok = SDL_StartTextInput((editor)->ui->window);
-    if (!ok) {
-        printf("PANIC: failed to start capturing text input");
-        abort();
-    }
+  bool ok = SDL_StartTextInput((editor)->ui->window);
+  if (!ok) {
+    printf("PANIC: failed to start capturing text input");
+    abort();
+  }
 
-    return editor;
+  return editor;
 }
 
-void destroyEditor(Editor* editor) {
-    SDL_StopTextInput((editor)->ui->window);
-    destroyBuffer((editor)->buffer);
-    destroyUI((editor)->ui);
-    destroyLineIndex((editor)->lineIndex);
-    destroyStringCache((editor)->stringCache);
-    umkaFree((editor)->umkaContext);
-    free(editor);
+void DestroyEditor(Editor* editor) {
+  SDL_StopTextInput((editor)->ui->window);
+  DestroyBuffer((editor)->buffer);
+  DestroyUI((editor)->ui);
+  DestroyLineIndex((editor)->line_index);
+  DestroyStringCache((editor)->str_cache);
+  umkaFree((editor)->umka_context);
+  free(editor);
 }
 
-size_t gapLength(Editor* editor) {
-    return (editor)->buffer->gapEnd - (editor)->buffer->gapStart;
+size_t GapLength(Editor* editor) {
+  return (editor)->buffer->gap_end - (editor)->buffer->gap_start;
 }
 
-size_t bufferPrefixLength(Editor* editor) {
-    return (editor)->buffer->gapStart;
+size_t BufferPrefixLength(Editor* editor) {
+  return (editor)->buffer->gap_start;
 }
 
-size_t bufferSuffixLength(Editor* editor) {
-    return (editor)->buffer->capacity - (editor)->buffer->gapEnd;
+size_t BufferSuffixLength(Editor* editor) {
+  return (editor)->buffer->capacity - (editor)->buffer->gap_end;
 }
 
-size_t bufferCapacity(Editor* editor) {
-    return (editor)->buffer->capacity;
+size_t BufferCapacity(Editor* editor) {
+  return (editor)->buffer->capacity;
 }
 
-size_t bufferGapStart(Editor* editor) {
-    return (editor)->buffer->gapStart;
+size_t BufferGapStart(Editor* editor) {
+  return (editor)->buffer->gap_start;
 }
 
-size_t bufferGapEnd(Editor* editor) {
-    return (editor)->buffer->gapEnd;
+size_t BufferGapEnd(Editor* editor) {
+  return (editor)->buffer->gap_end;
 }
 
-void resizeBuffer(Editor* editor, size_t newCapacity) {
-    size_t oldCapacity = bufferCapacity(editor);
-    size_t capacityOffset = newCapacity - oldCapacity;
+void ResizeBuffer(Editor* editor, size_t new_cap) {
+  size_t old_cap = BufferCapacity(editor);
+  size_t cap_offset = new_cap - old_cap;
 
-    GapBuffer* tempBuff = (GapBuffer*)realloc((editor)->buffer, sizeof(GapBuffer) + newCapacity * sizeof(char));
-    printf("Resized\n");
+  GapBuffer* temp_buff = (GapBuffer*)realloc(
+      (editor)->buffer, sizeof(GapBuffer) + new_cap * sizeof(char));
+  printf("Resized\n");
 
-    if (tempBuff == NULL) {
-        printf("PANIC: failed to reallocate buffer\n");
-        exit(1);
-    } else {
-        (editor)->buffer = tempBuff;
+  if (temp_buff == NULL) {
+    printf("PANIC: failed to reallocate buffer\n");
+    exit(1);
+  } else {
+    (editor)->buffer = temp_buff;
 
-        // I don't know if this calculation is right honestly
-        // TODO: Map out the math here a bit better so we don't seg fault
-        (editor)->buffer->gapEnd = bufferGapStart(editor) + capacityOffset;
-        (editor)->buffer->capacity = newCapacity;
-    }
+    // I don't know if this calculation is right honestly
+    // TODO: Map out the math here a bit better so we don't seg fault
+    (editor)->buffer->gap_end = BufferGapStart(editor) + cap_offset;
+    (editor)->buffer->capacity = new_cap;
+  }
 }
 
-void insertChar(Editor* editor, const char c) {
-    if (gapLength(editor) > 1) {
-        (editor)->buffer->data[(editor)->buffer->gapStart++] = c;
-        (editor)->stringCache->cacheStatus = CacheStatusBad;
-    } else {
-        resizeBuffer(editor, bufferCapacity(editor) * 2);
-        insertChar(editor, c);
-    }
+void InsertChar(Editor* editor, const char c) {
+  if (GapLength(editor) > 1) {
+    (editor)->buffer->data[(editor)->buffer->gap_start++] = c;
+    (editor)->str_cache->cache_status = CacheStatusBad;
+  } else {
+    ResizeBuffer(editor, BufferCapacity(editor) * 2);
+    InsertChar(editor, c);
+  }
 }
 
-void insertString(Editor* editor, const char* str) {
-    size_t length = strlen(str);
-    for (size_t i = 0; i <= length - 1; i++) {
-        insertChar(editor, str[i]);
-    }
+void InsertString(Editor* editor, const char* str) {
+  size_t length = strlen(str);
+  for (size_t i = 0; i <= length - 1; i++) {
+    InsertChar(editor, str[i]);
+  }
 }
 
-void backspace(Editor* editor) {
-    if (bufferGapStart(editor) > 0) {
-        (editor)->buffer->gapStart--;
-        (editor)->stringCache->cacheStatus = CacheStatusBad;
-    }
+void Backspace(Editor* editor) {
+  if (BufferGapStart(editor) > 0) {
+    (editor)->buffer->gap_start--;
+    (editor)->str_cache->cache_status = CacheStatusBad;
+  }
 }
 
-void moveLeft(Editor* editor) {
-    if (bufferGapStart(editor) > 0) {
-        const char c = (editor)->buffer->data[bufferGapStart(editor) - 1];
-        (editor)->buffer->data[bufferGapEnd(editor)] = c;
-        (editor)->buffer->gapStart--;
-        (editor)->buffer->gapEnd--;
-    }
+void MoveLeft(Editor* editor) {
+  if (BufferGapStart(editor) > 0) {
+    const char c = (editor)->buffer->data[BufferGapStart(editor) - 1];
+    (editor)->buffer->data[BufferGapEnd(editor)] = c;
+    (editor)->buffer->gap_start--;
+    (editor)->buffer->gap_end--;
+  }
 }
 
-void moveRight(Editor* editor) {
-    if (bufferGapEnd(editor) < bufferCapacity(editor)) {
-        const char c = (editor)->buffer->data[bufferGapEnd(editor) + 1];
-        (editor)->buffer->data[bufferGapStart(editor)] = c;
-        (editor)->buffer->gapStart++;
-        (editor)->buffer->gapEnd++;
-    }
+void MoveRight(Editor* editor) {
+  if (BufferGapEnd(editor) < BufferCapacity(editor)) {
+    const char c = (editor)->buffer->data[BufferGapEnd(editor) + 1];
+    (editor)->buffer->data[BufferGapStart(editor)] = c;
+    (editor)->buffer->gap_start++;
+    (editor)->buffer->gap_end++;
+  }
 }
 
-void recalculateStringCache(Editor* editor) {
-    size_t newCacheSize = sizeof(StringCache) + bufferCapacity(editor);
-    StringCache* tempCache = (StringCache*)realloc((editor)->stringCache, newCacheSize);
+void RecalculateStringCache(Editor* editor) {
+  size_t newCacheSize = sizeof(StringCache) + BufferCapacity(editor);
+  StringCache* temp_cache =
+      (StringCache*)realloc((editor)->str_cache, newCacheSize);
 
-    if (tempCache == NULL) {
-        printf("PANIC: failed to reallocate the string cache\n");
-        exit(1);
-    } else {
-        size_t gapEndOffset = (editor)->buffer->gapEnd + 1;
-        size_t leftSideLength = bufferPrefixLength(editor);
-        size_t rightSideLength = bufferSuffixLength(editor);
+  if (temp_cache == NULL) {
+    printf("PANIC: failed to reallocate the string cache\n");
+    exit(1);
+  } else {
+    size_t gap_end_offset = (editor)->buffer->gap_end + 1;
+    // Left side of the gap
+    size_t prefix_length = BufferPrefixLength(editor);
+    // Right side of the gap
+    size_t suffix_length = BufferSuffixLength(editor);
 
-        (editor)->stringCache = tempCache;
+    (editor)->str_cache = temp_cache;
 
-        strncpy((editor)->stringCache->cache, (editor)->buffer->data, leftSideLength);
-        strncpy(editor->stringCache->cache + leftSideLength, (editor)->buffer->data + gapEndOffset, rightSideLength);
+    strncpy((editor)->str_cache->cache, (editor)->buffer->data, prefix_length);
+    strncpy(editor->str_cache->cache + prefix_length,
+            (editor)->buffer->data + gap_end_offset, suffix_length);
 
-        (editor)->stringCache->size = leftSideLength + rightSideLength;
-        (editor)->stringCache->cacheStatus = CacheStatusGood;
-    }
+    (editor)->str_cache->size = prefix_length + suffix_length;
+    (editor)->str_cache->cache_status = CacheStatusGood;
+  }
 }
 
-char* toString(Editor* editor) {
-    if ((editor)->stringCache->cacheStatus == CacheStatusGood) {
-        return (editor)->stringCache->cache;
-    } else {
-        recalculateStringCache(editor);
-        return (editor)->stringCache->cache;
-    }
+char* ToString(Editor* editor) {
+  if ((editor)->str_cache->cache_status == CacheStatusGood) {
+    return (editor)->str_cache->cache;
+  } else {
+    RecalculateStringCache(editor);
+    return (editor)->str_cache->cache;
+  }
 }
 
-size_t stringSize(Editor* editor) {
-    return (editor)->stringCache->size;
+size_t StringSize(Editor* editor) {
+  return (editor)->str_cache->size;
 }
 
-void incrementLine(Editor* editor, int newIndex) {
-    if(editor->lineIndex->capacity > editor->lineIndex->lineCount) {
-        (editor)->lineIndex->lines[(editor)->lineIndex->lineCount++] = newIndex;
-        (editor)->lineIndex->currentLine++;
-        printf("New Index: %d\n", newIndex);
-    } else {
-        printf("Index needs resized\n");
-    }
+void IncrementLine(Editor* editor, int new_index) {
+  if (editor->line_index->capacity > editor->line_index->line_count) {
+    (editor)->line_index->lines[(editor)->line_index->line_count++] = new_index;
+    (editor)->line_index->current_line++;
+    printf("New Index: %d\n", new_index);
+  } else {
+    printf("Index needs resized\n");
+  }
 }

@@ -1,13 +1,14 @@
 #include "../include/string_cache.h"
 
-StringCache* newStringCache(void) {
-    StringCache* stringCache = (StringCache*)malloc(sizeof(StringCache) + sizeof(char));
-    stringCache->cacheStatus = CacheStatusBad;
-    stringCache->size = 0;
-    return stringCache;
+StringCache* NewStringCache(void) {
+  StringCache* string_cache =
+      (StringCache*)malloc(sizeof(StringCache) + sizeof(char));
+  string_cache->cache_status = CacheStatusBad;
+  string_cache->size = 0;
+  return string_cache;
 }
 
-void destroyStringCache(StringCache* stringCache) {
-    free(stringCache);
-    stringCache = NULL;
+void DestroyStringCache(StringCache* stringCache) {
+  free(stringCache);
+  stringCache = NULL;
 }

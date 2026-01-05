@@ -1,21 +1,21 @@
 #include "../include/gap_buffer.h"
 
-GapBuffer* newBuffer(size_t initialCapacity) {
-    GapBuffer *buff = (GapBuffer*)malloc(sizeof(GapBuffer) + initialCapacity * sizeof(char));
+GapBuffer* NewBuffer(size_t initial_cap) {
+  GapBuffer* buff =
+      (GapBuffer*)malloc(sizeof(GapBuffer) + initial_cap * sizeof(char));
 
-    if (buff == NULL) {
-        printf("failed to allocate buffer");
-        exit(1);
-    }
+  if (buff == NULL) {
+    printf("failed to allocate buffer");
+    exit(1);
+  }
 
-    (buff)->gapStart = 0;
-    (buff)->capacity = initialCapacity;
-    (buff)->gapEnd = initialCapacity;
-    return buff;
+  (buff)->gap_start = 0;
+  (buff)->capacity = initial_cap;
+  (buff)->gap_end = initial_cap;
+  return buff;
 }
 
-void destroyBuffer(GapBuffer* buff) {
-    free(buff);
-    buff = NULL;
+void DestroyBuffer(GapBuffer* buff) {
+  free(buff);
+  buff = NULL;
 }
-

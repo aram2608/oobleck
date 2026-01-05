@@ -17,9 +17,9 @@
 typedef struct {
     UI* ui; /**< Pointer to UI, contains base window/rendering utils */
     GapBuffer* buffer; /**< Pointer to the gap buffer for storing text */
-    LineIndex* lineIndex; /** Pointer to line index */
-    StringCache* stringCache; /** Pointer to the String Cache */
-    Umka* umkaContext; /**< Pointer to Umka, used for scripting layer */
+    LineIndex* line_index; /** Pointer to line index */
+    StringCache* str_cache; /** Pointer to the String Cache */
+    Umka* umka_context; /**< Pointer to Umka, used for scripting layer */
 } Editor;
 
 /**
@@ -32,13 +32,13 @@ typedef struct {
  * 
  * @return A pointer to a new editor
  */
-Editor* newEditor(int argc, char** argv);
+Editor* NewEditor(int argc, char** argv);
 
 /**
  * @brief Function to destroy an instance of an editor
  * @param editor Pointer to an editor
  */
-void destroyEditor(Editor* editor);
+void DestroyEditor(Editor* editor);
 
 /**
  * @brief Function to return the length of the gap
@@ -47,7 +47,7 @@ void destroyEditor(Editor* editor);
  * A simple calculation of the gapEnd - gapStart
  * @return The size of the gap
  */
-size_t gapLength(Editor* editor);
+size_t GapLength(Editor* editor);
 
 /**
  * @brief Function to return the length of the buffer prefix
@@ -58,7 +58,7 @@ size_t gapLength(Editor* editor);
  * 
  * @return The size of the buffer prefix (ie. the start of the gap)
  */
-size_t bufferPrefixLength(Editor* editor);
+size_t BufferPrefixLength(Editor* editor);
 
 /**
  * @brief Function to return the length of the buffer suffix
@@ -69,7 +69,7 @@ size_t bufferPrefixLength(Editor* editor);
  * 
  * @return The size of the buffer suffix
  */
-size_t bufferSuffixLength(Editor* editor);
+size_t BufferSuffixLength(Editor* editor);
 
 /**
  * @brief Function to return the buffer capacity
@@ -79,7 +79,7 @@ size_t bufferSuffixLength(Editor* editor);
  * 
  * @return The bufer capacity size
  */
-size_t bufferCapacity(Editor* editor);
+size_t BufferCapacity(Editor* editor);
 
 /**
  * @brief Function to return the buffer gap start
@@ -89,7 +89,7 @@ size_t bufferCapacity(Editor* editor);
  * 
  * @return The start position of the buffer's gap
  */
-size_t bufferGapStart(Editor* editor);
+size_t BufferGapStart(Editor* editor);
 
 /**
  * @brief Function to return the buffer gap end
@@ -99,7 +99,7 @@ size_t bufferGapStart(Editor* editor);
  * 
  * @return The end position of the buffer's gap
  */
-size_t bufferGapEnd(Editor* editor);
+size_t BufferGapEnd(Editor* editor);
 
 /**
  * @brief Function to resize the gap buffer
@@ -108,9 +108,9 @@ size_t bufferGapEnd(Editor* editor);
  * (editor)->buffer->capacity * 2
  * 
  * @param editor A pointer to the editor
- * @param newCapacity The new size desired for the buffer
+ * @param new_cap The new size desired for the buffer
  */
-void resizeBuffer(Editor* editor, size_t newCapacity);
+void ResizeBuffer(Editor* editor, size_t new_cap);
 
 /**
  * @brief Function to insert a character into the buffer
@@ -118,7 +118,7 @@ void resizeBuffer(Editor* editor, size_t newCapacity);
  * @param editor A pointer to the editor
  * @param c The character to be inserted
  */
-void insertChar(Editor* editor, const char c);
+void InsertChar(Editor* editor, const char c);
 
 /**
  * @brief Function to insert an entire C string into the buffer
@@ -128,31 +128,31 @@ void insertChar(Editor* editor, const char c);
  * @param editor A pointer to the editor
  * @param str The string to be inserted
  */
-void insertString(Editor* editor, const char* str);
+void InsertString(Editor* editor, const char* str);
 
 /**
  * @brief A function to remove a character from the buffer following a backspace
  * @param editor A pointer to the editor
  */
-void backspace(Editor* editor);
+void Backspace(Editor* editor);
 
 /**
  * @brief Function to move the cursor left
  * @param editor A pointer to the editor
  */
-void moveLeft(Editor* editor);
+void MoveLeft(Editor* editor);
 
 /**
  * @brief Function to move the cursor right
  * @param editor A pointer to the editor
  */
-void moveRight(Editor* editor);
+void MoveRight(Editor* editor);
 
 /**
  * @brief Function to recalculate the cached string
  * @param editor A pointer to the editor
  */
-void recalculateStringCache(Editor* editor);
+void RecalculateStringCache(Editor* editor);
 
 /**
  * @brief Function to return the string representation of the buffer
@@ -163,7 +163,7 @@ void recalculateStringCache(Editor* editor);
  * 
  * @return The cached string
  */
-char* toString(Editor* editor);
+char* ToString(Editor* editor);
 
 /**
  * @brief Function to return the cached string's size
@@ -173,8 +173,12 @@ char* toString(Editor* editor);
  * 
  * @return The size of the cached string
  */
-size_t stringSize(Editor* editor);
+size_t StringSize(Editor* editor);
 
-void incrementLine(Editor* editor, int lineIndex);
+/**
+ * @brief Function to increment the line index
+ * @param new_index The new line index
+ */
+void IncrementLine(Editor* editor, int new_index);
 
 #endif // EDITOR_H

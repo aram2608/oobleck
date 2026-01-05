@@ -1,34 +1,25 @@
 #include "../include/umka_plugin.h"
 
-Umka* loadUmka(const char* filePath, int argc, char** argv) {
-    int stackSize = 4096;
+Umka* LoadUmka(const char* file_path, int argc, char** argv) {
+  int stackSize = 4096;
 
-    Umka* umka = umkaAlloc();
-    bool fileSystem = true;
-    bool implLibs = true;
+  Umka* umka = umkaAlloc();
+  bool fileSystem = true;
+  bool implLibs = true;
 
-    bool ok = umkaInit(
-        umka, 
-        filePath, 
-        NULL,
-        stackSize,
-        NULL, 
-        argc,
-        argv, 
-        fileSystem, 
-        implLibs,
-        NULL);
-    
-    if (!ok) {
-        printf("UmkaError: failed to initialize Umka\n");
-        exit(1);
-    }
+  bool ok = umkaInit(umka, file_path, NULL, stackSize, NULL, argc, argv,
+                     fileSystem, implLibs, NULL);
 
-    ok = umkaCompile(umka);
+  if (!ok) {
+    printf("UmkaError: failed to initialize Umka\n");
+    exit(1);
+  }
 
-    if (!ok) {
-        printf("UmkaError: failed to compile Umka\n");
-        exit(1);
-    }
-    return umka;
+  ok = umkaCompile(umka);
+
+  if (!ok) {
+    printf("UmkaError: failed to compile Umka\n");
+    exit(1);
+  }
+  return umka;
 }

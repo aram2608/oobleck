@@ -16,11 +16,11 @@
 /**
  * @brief Function used to create an Umka context
  * 
- * @param filePath The path to the Umka Script
+ * @param file_path The path to the Umka Script
  * @param argc The command line argument number
  * @param argv The command line arguments
  * @return A pointer to the Umka context
  */
-Umka* loadUmka(const char* filePath, int argc, char** argv);
+Umka* LoadUmka(const char* file_path, int argc, char** argv);
 
 #endif // UMKA_PLUGIN_H

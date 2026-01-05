@@ -3,6 +3,7 @@
 
 /**
  * @headerfile string_cache.h
+ * @brief A string cache to store the current buffer string
  */
 
 #include <stdlib.h>
@@ -17,7 +18,7 @@ typedef enum {
 /// @struct StringCache
 /// @brief A dynamically sized array using a Flexible Array member to store a string
 typedef struct {
-    CacheStatus cacheStatus;
+    CacheStatus cache_status;
     size_t size;
     char cache[];
 } StringCache;
@@ -26,12 +27,12 @@ typedef struct {
  * @brief A method to create a new string cache
  * @return A pointer to the string cache
  */
-StringCache* newStringCache(void);
+StringCache* NewStringCache(void);
 
 /**
  * @brief Function to free a string cache's resources
- * @param stringCache A pointer to the string cache
+ * @param string_cache A pointer to the string cache
  */
-void destroyStringCache(StringCache* stringCache);
+void DestroyStringCache(StringCache* string_cache);
 
 #endif

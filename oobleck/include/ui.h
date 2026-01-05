@@ -28,14 +28,14 @@ typedef struct {
  * @brief Function used to create a new UI structure
  * @return A pointer to a UI
  */
-UI* createUI(void);
+UI* CreateUI(void);
 
 /**
  * @brief Function used to initialize an SDL context
  * 
  * This function is later invoked upon UI creation
  */
-void initializeSDL(void);
+void InitializeSDL(void);
 
 /**
  * @brief Function used to render the Gap Buffer's text to the window
@@ -44,19 +44,21 @@ void initializeSDL(void);
  * 
  * @param ui A pointer to the UI structure
  * @param text The C string to be rendered to the window
+ * @param text_length The length of the C string
  */
-void renderText(UI* ui, const char* text, size_t textLength);
+void RenderText(UI* ui, const char* text, size_t text_length);
 
 /**
  * @brief Function used to render to cursor
  * @param ui A pointer to the UI structure
- * @param cursorPos The current cursor position (ie. that gap start)
+ * @param cursor_pos The current cursor position (ie. that gap start)
+ * @param line_index The current line index
  */
-void renderCursor(UI* ui, size_t cursorPos, size_t lineIndex);
+void RenderCursor(UI* ui, size_t cursor_pos, size_t line_index);
 
 /**
  * @brief Function used to destroy the UI and cleanup allocated memory
  */
-void destroyUI(UI* ui);
+void DestroyUI(UI* ui);
 
 #endif // UI_H

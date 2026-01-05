@@ -17,24 +17,24 @@
 /// @brief Structure to represent the Gap Buffer.
 typedef struct {
     size_t capacity; /** The total capacity/size of the buffer */
-    size_t gapStart; /**< The start of the gap */
-    size_t gapEnd;  /**< The end of the gap */
+    size_t gap_start; /**< The start of the gap */
+    size_t gap_end;  /**< The end of the gap */
     char data[]; /**< The data is stored in a flexible array member (FAM) */
 } GapBuffer;
 
 /**
  * @brief Function to create a new gap buffer
  * 
- * @param initialCapacity The intital starting capacity for the buffer
+ * @param initial_cap The intital starting capacity for the buffer
  * @return A pointer to the newly created buffer
  */
-GapBuffer* newBuffer(size_t initialCapacity);
+GapBuffer* NewBuffer(size_t initial_cap);
 
 /**
  * @brief Function to destroy the buffer at the end of the program
  * 
  * @param buff A pointer to the gap buffer
  */
-void destroyBuffer(GapBuffer* buff);
+void DestroyBuffer(GapBuffer* buff);
 
 #endif // GAP_BUFFER_H
