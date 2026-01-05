@@ -181,4 +181,13 @@ size_t StringSize(Editor* editor);
  */
 void IncrementLine(Editor* editor, int new_index);
 
+/**
+ * @brief Wrapper method for the UI rendering utilities
+ * 
+ * This is a simple wrapper to help clean up the main.c file
+ * 
+ * @param editor A pointer to the editor
+ */
+void RenderGUI(Editor* editor);
+
 #endif // EDITOR_H
