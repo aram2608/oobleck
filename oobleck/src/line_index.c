@@ -1,12 +1,12 @@
 #include "../include/line_index.h"
 
 LineIndex* NewLineIndex(void) {
-  LineIndex* lineIndex = (LineIndex*)malloc(
+  LineIndex* line_index = (LineIndex*)malloc(
       sizeof(LineIndex) + INITIAL_LINE_INDEX_SIZE * sizeof(int));
-  (lineIndex)->line_count = 0;
-  (lineIndex)->capacity = INITIAL_LINE_INDEX_SIZE;
-  (lineIndex)->current_line = 0;
-  return lineIndex;
+  line_index->line_count = 0;
+  line_index->capacity = INITIAL_LINE_INDEX_SIZE;
+  line_index->current_line = 0;
+  return line_index;
 }
 
 void DestroyLineIndex(LineIndex* line_index) {

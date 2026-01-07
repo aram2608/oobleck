@@ -4,16 +4,16 @@ UI* CreateUI(void) {
   InitializeSDL();
   UI* ui = (UI*)malloc(sizeof(UI));
 
-  (ui)->font = TTF_OpenFont("./font/Fira_Code/static/FiraCode-Regular.ttf", 10);
+  ui->font = TTF_OpenFont("./font/Fira_Code/static/FiraCode-Regular.ttf", 10);
 
-  if ((ui)->font == NULL) {
+  if (ui->font == NULL) {
     printf("PANIC: failed to load font\n");
     abort();
   }
 
-  (ui)->window =
+  ui->window =
       SDL_CreateWindow("oobleck", WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_PARAMS);
-  (ui)->renderer = SDL_CreateRenderer((ui)->window, NULL);
+  ui->renderer = SDL_CreateRenderer(ui->window, NULL);
   return ui;
 }
 
@@ -50,9 +50,9 @@ void RenderCursor(UI* ui, size_t cursor_pos, size_t line_index) {
     textRect.y = 50 * line_index;
   }
 
-  SDL_SetRenderDrawColor((ui)->renderer, 255, 255, 255, 255);
+  SDL_SetRenderDrawColor(ui->renderer, 255, 255, 255, 255);
 
-  bool ok = SDL_RenderFillRect((ui)->renderer, &textRect);
+  bool ok = SDL_RenderFillRect(ui->renderer, &textRect);
 
   if (!ok) {
     printf("PANIC: failed to render cursor");
@@ -73,7 +73,7 @@ void RenderText(UI* ui, const char* text, size_t textLength) {
   };
 
   SDL_Surface* textSurface = TTF_RenderText_Solid_Wrapped(
-      (ui)->font, text, textLength, color, WINDOW_WIDTH);
+      ui->font, text, textLength, color, WINDOW_WIDTH);
 
   if (textSurface == NULL) {
     printf("PANIC: failure creating text surface\n");
@@ -81,7 +81,7 @@ void RenderText(UI* ui, const char* text, size_t textLength) {
   }
 
   SDL_Texture* textImage =
-      SDL_CreateTextureFromSurface((ui)->renderer, textSurface);
+      SDL_CreateTextureFromSurface(ui->renderer, textSurface);
 
   SDL_FRect textRect = {
       .h = textSurface->h * 5,
@@ -90,7 +90,7 @@ void RenderText(UI* ui, const char* text, size_t textLength) {
       .y = 0,
   };
 
-  bool ok = SDL_RenderTexture((ui)->renderer, textImage, NULL, &textRect);
+  bool ok = SDL_RenderTexture(ui->renderer, textImage, NULL, &textRect);
 
   if (!ok) {
     printf("PANIC: failed to render texture\n");
@@ -102,9 +102,9 @@ void RenderText(UI* ui, const char* text, size_t textLength) {
 }
 
 void DestroyUI(UI* ui) {
-  TTF_CloseFont((ui)->font);
-  SDL_DestroyRenderer((ui)->renderer);
-  SDL_DestroyWindow((ui)->window);
+  TTF_CloseFont(ui->font);
+  SDL_DestroyRenderer(ui->renderer);
+  SDL_DestroyWindow(ui->window);
   free(ui);
   TTF_Quit();
   SDL_Quit();

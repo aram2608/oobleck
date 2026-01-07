@@ -9,9 +9,9 @@ GapBuffer* NewBuffer(size_t initial_cap) {
     exit(1);
   }
 
-  (buff)->gap_start = 0;
-  (buff)->capacity = initial_cap;
-  (buff)->gap_end = initial_cap;
+  buff->gap_start = 0;
+  buff->capacity = initial_cap;
+  buff->gap_end = initial_cap;
   return buff;
 }
 
