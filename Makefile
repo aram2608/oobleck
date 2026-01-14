@@ -1,5 +1,5 @@
 # Compiler
-CC := gcc
+CC := clang
 
 # Build directory and target
 APP := ./oobleck
@@ -18,11 +18,12 @@ LIB_DIR := $(APP)/libs
 
 # Flags for gcc command
 INCLUDE_FLAGS := -I$(INCLUDES)
-LDFLAGS := -L$(LIB_DIR)
-UMKAFLAGS := -lumka_static_darwin
+UMKAFLAGS := -L$(LIB_DIR) -lumka_static_darwin
 SDLFLAGS := $(shell pkg-config --cflags --libs --static sdl3-ttf)
-CFLAGS := -Wall -Wextra -pedantic
+GLFLAGS := -I/opt/homebrew/Cellar/glfw/3.4/include -L/opt/homebrew/Cellar/glfw/3.4/lib -lglfw3 -framework Cocoa -framework IOKit -framework CoreFoundation
+GLEWFLAGS := $(shell pkg-config --cflags --libs --static glew)
+CFLAGS := -g -Wall -Wextra -pedantic -framework OpenGL
 
 $(BUILD_DIR)/$(TARGET):
 	@mkdir -p $(@D)
-	$(CC) $(INCLUDE_FLAGS) $(SRC_FILES) $(LDFLAGS) $(UMKAFLAGS) $(SDLFLAGS) -o $@ $(CFLAGS)
+	$(CC) $(INCLUDE_FLAGS) $(UMKAFLAGS) $(SDLFLAGS) $(GLFLAGS) $(GLEWFLAGS) $(CFLAGS) -o $@ $(SRC_FILES)

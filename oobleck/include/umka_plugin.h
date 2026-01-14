@@ -3,7 +3,8 @@
 
 /**
  * @headerfile umka_plugin.h
- * @brief Provides wrapper functions for the creation of an Umka context for editor plugin purposes
+ * @brief Provides wrapper functions for the creation of an Umka context for
+ * editor plugin purposes
  */
 
 #include <stdio.h>
@@ -15,7 +16,7 @@
 
 /**
  * @brief Function used to create an Umka context
- * 
+ *
  * @param file_path The path to the Umka Script
  * @param argc The command line argument number
  * @param argv The command line arguments
@@ -23,4 +24,4 @@
  */
 Umka* LoadUmka(const char* file_path, int argc, char** argv);
 
-#endif // UMKA_PLUGIN_H
+#endif  // UMKA_PLUGIN_H

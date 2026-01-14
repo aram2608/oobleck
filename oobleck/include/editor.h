@@ -15,21 +15,22 @@
 /// @struct Editor
 /// @brief Structure to store editor specific objects
 typedef struct {
-    UI* ui; /**< Pointer to UI, contains base window/rendering utils */
-    GapBuffer* buffer; /**< Pointer to the gap buffer for storing text */
-    LineIndex* line_index; /** Pointer to line index */
-    StringCache* str_cache; /** Pointer to the String Cache */
-    Umka* umka_context; /**< Pointer to Umka, used for scripting layer */
+  UI* ui;            /**< Pointer to UI, contains base window/rendering utils */
+  GapBuffer* buffer; /**< Pointer to the gap buffer for storing text */
+  LineIndex* line_index;  /** Pointer to line index */
+  StringCache* str_cache; /** Pointer to the String Cache */
+  Umka* umka_context;     /**< Pointer to Umka, used for scripting layer */
 } Editor;
 
 /**
- * @brief Function to create a new editor structure, caller must deallocate memory
+ * @brief Function to create a new editor structure, caller must deallocate
+ * memory
  * @param argc The command line argument count
  * @param argv The command line arguments
- * 
+ *
  * The provided parameters do not do anythin as of right now. They are simply
  * passed to the Umka context for its constructor.
- * 
+ *
  * @return A pointer to a new editor
  */
 Editor* NewEditor(int argc, char** argv);
@@ -43,7 +44,7 @@ void DestroyEditor(Editor* editor);
 /**
  * @brief Function to return the length of the gap
  * @param editor A pointer to the editor
- * 
+ *
  * A simple calculation of the gapEnd - gapStart
  * @return The size of the gap
  */
@@ -52,10 +53,10 @@ size_t GapLength(Editor* editor);
 /**
  * @brief Function to return the length of the buffer prefix
  * @param editor A pointer to the editor
- * 
+ *
  * Simply returns the start of the gap. Used primarily for readability during
  * calculations.
- * 
+ *
  * @return The size of the buffer prefix (ie. the start of the gap)
  */
 size_t BufferPrefixLength(Editor* editor);
@@ -63,10 +64,10 @@ size_t BufferPrefixLength(Editor* editor);
 /**
  * @brief Function to return the length of the buffer suffix
  * @param editor A pointer to the editor
- * 
+ *
  * Calculating the suffix is slightly more involved than the prefix.
  * We need to subtract the total capacity from the end of the gap.
- * 
+ *
  * @return The size of the buffer suffix
  */
 size_t BufferSuffixLength(Editor* editor);
@@ -74,9 +75,9 @@ size_t BufferSuffixLength(Editor* editor);
 /**
  * @brief Function to return the buffer capacity
  * @param editor A pointer to the editor
- * 
+ *
  * A simple helper function to improve readability for calculations
- * 
+ *
  * @return The bufer capacity size
  */
 size_t BufferCapacity(Editor* editor);
@@ -84,9 +85,10 @@ size_t BufferCapacity(Editor* editor);
 /**
  * @brief Function to return the buffer gap start
  * @param editor A pointer to the editor
- * 
- * A simple helper function to improve readability, an alias for bufferPrefixLength
- * 
+ *
+ * A simple helper function to improve readability, an alias for
+ * bufferPrefixLength
+ *
  * @return The start position of the buffer's gap
  */
 size_t BufferGapStart(Editor* editor);
@@ -94,19 +96,19 @@ size_t BufferGapStart(Editor* editor);
 /**
  * @brief Function to return the buffer gap end
  * @param editor A pointer to the editor
- * 
+ *
  * A simple helper function to improve readability for calculations
- * 
+ *
  * @return The end position of the buffer's gap
  */
 size_t BufferGapEnd(Editor* editor);
 
 /**
  * @brief Function to resize the gap buffer
- * 
+ *
  * A general rule of thumb is to double the size of the buffer as follows
  * (editor)->buffer->capacity * 2
- * 
+ *
  * @param editor A pointer to the editor
  * @param new_cap The new size desired for the buffer
  */
@@ -114,7 +116,7 @@ void ResizeBuffer(Editor* editor, size_t new_cap);
 
 /**
  * @brief Function to insert a character into the buffer
- * 
+ *
  * @param editor A pointer to the editor
  * @param c The character to be inserted
  */
@@ -122,9 +124,9 @@ void InsertChar(Editor* editor, const char c);
 
 /**
  * @brief Function to insert an entire C string into the buffer
- * 
+ *
  * Is simply a wrapper for the insertChar function
- * 
+ *
  * @param editor A pointer to the editor
  * @param str The string to be inserted
  */
@@ -157,10 +159,10 @@ void RecalculateStringCache(Editor* editor);
 /**
  * @brief Function to return the string representation of the buffer
  * @param editor A pointer to the editor
- * 
+ *
  * This method simply returns the cached string. It first tests to see if the
  * cache status is okay
- * 
+ *
  * @return The cached string
  */
 char* ToString(Editor* editor);
@@ -168,9 +170,9 @@ char* ToString(Editor* editor);
 /**
  * @brief Function to return the cached string's size
  * @param editor A pointer to the editor
- * 
+ *
  * This method simply returns the cached string's size.
- * 
+ *
  * @return The size of the cached string
  */
 size_t StringSize(Editor* editor);
@@ -183,11 +185,11 @@ void IncrementLine(Editor* editor, int new_index);
 
 /**
  * @brief Wrapper method for the UI rendering utilities
- * 
+ *
  * This is a simple wrapper to help clean up the main.c file
- * 
+ *
  * @param editor A pointer to the editor
  */
 void RenderGUI(Editor* editor);
 
-#endif // EDITOR_H
+#endif  // EDITOR_H

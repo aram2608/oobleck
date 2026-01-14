@@ -11,16 +11,17 @@
 /// @enum CacheStatus
 /// @brief An enum to store the Cached String's status
 typedef enum {
-    CacheStatusGood,
-    CacheStatusBad,
+  CacheStatusGood,
+  CacheStatusBad,
 } CacheStatus;
 
 /// @struct StringCache
-/// @brief A dynamically sized array using a Flexible Array member to store a string
+/// @brief A dynamically sized array using a Flexible Array member to store a
+/// string
 typedef struct {
-    CacheStatus cache_status;
-    size_t size;
-    char cache[];
+  CacheStatus cache_status;
+  size_t size;
+  char cache[];
 } StringCache;
 
 /**

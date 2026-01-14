@@ -1,19 +1,30 @@
 #include "../include/ui.h"
 
+static void FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
+  glViewport(0, 0, width, height);
+}
+
 UI* CreateUI(void) {
-  InitializeSDL();
+  // InitializeSDL();
+  InitializeOpenGL();
   UI* ui = (UI*)malloc(sizeof(UI));
 
-  ui->font = TTF_OpenFont("./font/Fira_Code/static/FiraCode-Regular.ttf", 10);
-
-  if (ui->font == NULL) {
-    printf("PANIC: failed to load font\n");
-    abort();
+  ui->window =
+      glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "oobleck", NULL, NULL);
+  if (ui->window == NULL) {
+    printf("ERROR: failed to create window\n");
+    exit(1);
   }
 
-  ui->window =
-      SDL_CreateWindow("oobleck", WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_PARAMS);
-  ui->renderer = SDL_CreateRenderer(ui->window, NULL);
+  glfwMakeContextCurrent(ui->window);
+  GLenum err = glewInit();
+  if (err != GLEW_OK) {
+    printf("ERROR: failed to initialize glew\n");
+    exit(1);
+  }
+
+  glViewport(0, 0, 800, 600);
+  glfwSetFramebufferSizeCallback(ui->window, FramebufferSizeCallback);
   return ui;
 }
 
@@ -31,6 +42,23 @@ void InitializeSDL(void) {
     printf("PANIC: failed to initialize SDL TTF\n");
     exit(1);
   }
+}
+
+void InitializeOpenGL(void) {
+  int ok = glfwInit();
+  if (!ok) {
+    printf("ERROR: failed to initialize glfw\n");
+    exit(1);
+  }
+  glfwDefaultWindowHints();
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+}
+
+void CloseOpenGL(void) {
+  glfwTerminate();
 }
 
 void RenderCursor(UI* ui, size_t cursor_pos, size_t line_index) {

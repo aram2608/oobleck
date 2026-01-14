@@ -11,17 +11,17 @@
 #define INITIAL_LINE_INDEX_SIZE 25
 
 typedef struct {
-    size_t begin;
-    size_t end;
+  size_t begin;
+  size_t end;
 } Line;
 
 /// @struct LineIndex
 /// @brief Structure to represent editor line index
 typedef struct {
-    size_t capacity; /** Array capacity */
-    size_t line_count; /** Keep track of the current buffer position */
-    size_t current_line; /** The current line being editted */
-    int lines[];
+  size_t capacity;     /** Array capacity */
+  size_t line_count;   /** Keep track of the current buffer position */
+  size_t current_line; /** The current line being editted */
+  int lines[];
 } LineIndex;
 
 LineIndex* NewLineIndex(void);
