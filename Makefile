@@ -22,8 +22,10 @@ UMKAFLAGS := -L$(LIB_DIR) -lumka_static_darwin
 SDLFLAGS := $(shell pkg-config --cflags --libs --static sdl3-ttf)
 GLFLAGS := -I/opt/homebrew/Cellar/glfw/3.4/include -L/opt/homebrew/Cellar/glfw/3.4/lib -lglfw3 -framework Cocoa -framework IOKit -framework CoreFoundation
 GLEWFLAGS := $(shell pkg-config --cflags --libs --static glew)
+FTFLAGS := $(shell pkg-config --cflags --libs --static freetype2)
+CGLM := $(shell pkg-config --cflags --libs --static cglm)
 CFLAGS := -g -Wall -Wextra -pedantic -framework OpenGL
 
 $(BUILD_DIR)/$(TARGET):
 	@mkdir -p $(@D)
-	$(CC) $(INCLUDE_FLAGS) $(UMKAFLAGS) $(SDLFLAGS) $(GLFLAGS) $(GLEWFLAGS) $(CFLAGS) -o $@ $(SRC_FILES)
+	$(CC) $(INCLUDE_FLAGS) $(UMKAFLAGS) $(SDLFLAGS) $(GLFLAGS) $(GLEWFLAGS) $(FTFLAGS) $(CGLM) $(CFLAGS) -o $@ $(SRC_FILES)

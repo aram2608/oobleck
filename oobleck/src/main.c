@@ -1,20 +1,33 @@
 #include "../include/editor.h"
 
-// #include <SDL3/SDL.h>
-// #include <SDL3/SDL_main.h>
-
 int main(int argc, char** argv) {
   // Editor* editor = NewEditor(argc, argv);
   UI* ui = CreateUI();
+  glGenVertexArrays(1, &ui->VAO);
+  glGenBuffers(1, &ui->VBO);
+  glBindVertexArray(ui->VAO);
+  glBindBuffer(GL_ARRAY_BUFFER, ui->VBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
 
   while (!glfwWindowShouldClose(ui->window)) {
+    // Input
     if (glfwGetKey(ui->window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
       glfwSetWindowShouldClose(ui->window, true);
     }
 
-    glClearColor(0x00, 0x00, 0x00, 0xFF);
+    // Render
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    int width, height;
+    glfwGetFramebufferSize(ui->window, &width, &height);
+    RenderText(ui, "hello world", 10.0f, height - 50.0f, 1.0f);
+
+    // Swap buffs and poll IO
     glfwSwapBuffers(ui->window);
     glfwPollEvents();
   }

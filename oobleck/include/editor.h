@@ -11,6 +11,8 @@
 #include "gap_buffer.h"
 #include "ui.h"
 #include "umka_plugin.h"
+#include <stddef.h>
+#include <string.h>
 
 /// @struct Editor
 /// @brief Structure to store editor specific objects

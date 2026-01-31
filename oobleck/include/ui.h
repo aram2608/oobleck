@@ -7,24 +7,34 @@
  */
 
 #include "la.h"
+#include "shader.h"
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <SDL3/SDL.h>
-#include <SDL3/SDL_main.h>
-#include <SDL3_ttf/SDL_ttf.h>
+#include <cglm/cglm.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 #define WINDOW_PARAMS SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY
-#define WINDOW_WIDTH 600
-#define WINDOW_HEIGHT 600
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 800
+
+typedef struct {
+  unsigned int texture_id;
+  Vector2 size;
+  Vector2 bearing;
+  unsigned int advance;
+} Character;
 
 /// @brief Structure to store SDL components needed for rendering
 typedef struct {
-  TTF_Font* font;         /**< Pointer to text font */
-  GLFWwindow* window;     /**< Window used for drawing */
-  SDL_Renderer* renderer; /**< Renderer for text and other events */
+  unsigned int VAO;
+  unsigned int VBO;
+  Shader shader;
+  GLFWwindow* window; /**< Window used for drawing */
+  Character glyphs[128];
 } UI;
 
 /**
@@ -32,13 +42,6 @@ typedef struct {
  * @return A pointer to a UI
  */
 UI* CreateUI(void);
-
-/**
- * @brief Function used to initialize an SDL context
- *
- * This function is later invoked upon UI creation
- */
-void InitializeSDL(void);
 
 void InitializeOpenGL(void);
 
@@ -53,9 +56,8 @@ void CloseOpenGL(void);
  *
  * @param ui A pointer to the UI structure
  * @param text The C string to be rendered to the window
- * @param text_length The length of the C string
  */
-void RenderText(UI* ui, const char* text, size_t text_length);
+void RenderText(UI* ui, const char* text, float x, float y, float scale);
 
 /**
  * @brief Function used to render to cursor
@@ -69,5 +71,7 @@ void RenderCursor(UI* ui, size_t cursor_pos, size_t line_index);
  * @brief Function used to destroy the UI and cleanup allocated memory
  */
 void DestroyUI(UI* ui);
+
+bool CheckCompileError(GLuint shader, char* type);
 
 #endif  // UI_H

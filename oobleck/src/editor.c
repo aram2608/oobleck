@@ -8,18 +8,10 @@ Editor* NewEditor(int argc, char** argv) {
   editor->ui = CreateUI();
   editor->umka_context = LoadUmka("plugin.um", argc, argv);
   umkaRun(editor->umka_context);
-
-  bool ok = SDL_StartTextInput(editor->ui->window);
-  if (!ok) {
-    printf("PANIC: failed to start capturing text input");
-    abort();
-  }
-
   return editor;
 }
 
 void DestroyEditor(Editor* editor) {
-  SDL_StopTextInput(editor->ui->window);
   DestroyBuffer(editor->buffer);
   DestroyUI(editor->ui);
   DestroyLineIndex(editor->line_index);
@@ -55,20 +47,29 @@ size_t BufferGapEnd(Editor* editor) {
 void ResizeBuffer(Editor* editor, size_t new_cap) {
   size_t old_cap = BufferCapacity(editor);
   size_t cap_offset = new_cap - old_cap;
+  size_t old_prefix_len = BufferPrefixLength(editor);
+  size_t old_suffix_len = BufferSuffixLength(editor);
+
+  char old_prefix[old_prefix_len];
+  char old_suffix[old_suffix_len];
+  memcpy(old_prefix, editor->buffer->data, old_prefix_len);
+  memcpy(old_prefix, editor->buffer->data + editor->buffer->gap_end,
+         old_suffix_len);
 
   GapBuffer* temp_buff = (GapBuffer*)realloc(
       editor->buffer, sizeof(GapBuffer) + new_cap * sizeof(char));
   printf("Resized\n");
 
   if (temp_buff == NULL) {
-    printf("PANIC: failed to reallocate buffer\n");
+    fprintf(stderr, "PANIC: failed to reallocate buffer\n");
     exit(1);
   } else {
     editor->buffer = temp_buff;
 
-    // I don't know if this calculation is right honestly
-    // TODO: Map out the math here a bit better so we don't seg fault
-    editor->buffer->gap_end = BufferGapStart(editor) + cap_offset;
+    size_t new_gap_end = old_prefix_len + cap_offset;
+    memcpy(editor->buffer->data, old_prefix, old_prefix_len);
+    memcpy(editor->buffer->data + new_gap_end, old_suffix, old_prefix_len);
+    editor->buffer->gap_end = new_gap_end;
     editor->buffer->capacity = new_cap;
   }
 }
@@ -84,9 +85,15 @@ void InsertChar(Editor* editor, const char c) {
 }
 
 void InsertString(Editor* editor, const char* str) {
-  size_t length = strlen(str);
-  for (size_t i = 0; i <= length - 1; i++) {
-    InsertChar(editor, str[i]);
+  if (GapLength(editor) > 1) {
+    size_t str_size = strlen(str);
+    size_t buff_size = editor->buffer->gap_start;
+    memcpy(editor->buffer->data + buff_size, str, str_size);
+    editor->buffer->gap_start += str_size;
+    editor->str_cache->cache_status = CacheStatusBad;
+  } else {
+    ResizeBuffer(editor, BufferCapacity(editor) * 2);
+    InsertString(editor, str);
   }
 }
 
@@ -164,11 +171,4 @@ void IncrementLine(Editor* editor, int new_index) {
   }
 }
 
-void RenderGUI(Editor* editor) {
-  SDL_SetRenderDrawColor(editor->ui->renderer, 0, 0, 0, 0);
-  SDL_RenderClear(editor->ui->renderer);
-  RenderText(editor->ui, ToString(editor), StringSize(editor));
-  RenderCursor(editor->ui, BufferGapStart(editor),
-               editor->line_index->current_line);
-  SDL_RenderPresent(editor->ui->renderer);
-}
+void RenderGUI(Editor* editor) {}
